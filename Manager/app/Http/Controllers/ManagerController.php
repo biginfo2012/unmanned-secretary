@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Account;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class ManagerController extends Controller
@@ -15,14 +17,10 @@ class ManagerController extends Controller
         $status = $request->status;
         $contact = $request->contact;
         if (isset($status)){
-            $data = User::where('role', 'company')->where('status', $status)->where(function ($query) use ($contact) {
-                $query->where('contact', 'like', '%' . $contact . '%')->orWhere('name', 'like', '%' . $contact . '%');
-            })->get();
+            $data = User::where('role', 'company')->where('status', $status)->where('contact', 'like', '%' . $contact . '%')->orderBy('created_at', 'desc')->get();
         }
         else{
-            $data = User::where('role', 'company')->where(function ($query) use ($contact) {
-                $query->where('contact', 'like', '%' . $contact . '%')->orWhere('name', 'like', '%' . $contact . '%');
-            })->get();
+            $data = User::where('role', 'company')->where('contact', 'like', '%' . $contact . '%')->orderBy('created_at', 'desc')->get();
         }
 
         return view('company-table', compact('data'));
@@ -108,61 +106,44 @@ class ManagerController extends Controller
         return response()->json(['status' => true]);
     }
 
-    public function manageClient(){
-        return view('client-manage');
+    public function manageAccount(){
+        return view('account-manage');
     }
-    public function tableClient(Request $request){
+    public function tableAccount(Request $request){
         $status = $request->status;
         $contact = $request->contact;
         $type = $request->type;
+        $user_id = Auth::user()->id;
         if (isset($status)){
             if(isset($type)){
-                $data = User::where('role', 'client')->where('status', $status)->where('type', $type)->where(function ($query) use ($contact) {
-                    $query->where('contact', 'like', '%' . $contact . '%')->orWhere('name', 'like', '%' . $contact . '%');
-                })->get();
+                $data = Account::where('user_id', $user_id)->where('status', $status)->where('type', $type)->where('contact', 'like', '%' . $contact . '%')->orderBy('created_at', 'desc')->get();
             }
             else{
-                $data = User::where('role', 'client')->where('status', $status)->where(function ($query) use ($contact) {
-                    $query->where('contact', 'like', '%' . $contact . '%')->orWhere('name', 'like', '%' . $contact . '%');
-                })->get();
+                $data = Account::where('user_id', $user_id)->where('status', $status)->where('contact', 'like', '%' . $contact . '%')->orderBy('created_at', 'desc')->get();
             }
         }
         else{
             if(isset($type)){
-                $data = User::where('role', 'client')->where('type', $type)->where(function ($query) use ($contact) {
-                    $query->where('contact', 'like', '%' . $contact . '%')->orWhere('name', 'like', '%' . $contact . '%');
-                })->get();
+                $data = Account::where('user_id', $user_id)->where('type', $type)->where('contact', 'like', '%' . $contact . '%')->orderBy('created_at', 'desc')->get();
             }
             else{
-                $data = User::where('role', 'client')->where(function ($query) use ($contact) {
-                    $query->where('contact', 'like', '%' . $contact . '%')->orWhere('name', 'like', '%' . $contact . '%');
-                })->get();
+                $data = Account::where('user_id', $user_id)->where('contact', 'like', '%' . $contact . '%')->orderBy('created_at', 'desc')->get();
             }
         }
 
-        return view('client-table', compact('data'));
+        return view('account-table', compact('data'));
     }
-    public function addClient(){
-//        $ex = true;
-//        $code = 0;
-//        while($ex){
-//            $code = rand(100000, 999999);
-//            $c_user = User::where('user_code', $code)->first();
-//            if(!isset($c_user)) {
-//                $ex = false;
-//            }
-//        }
-        return view('client-add');
+    public function addAccount(){
+        return view('account-add');
     }
-    public function editClient($id){
-        $user = User::find($id);
-        return view('client-add', compact('user'));
+    public function editAccount($id){
+        $account = Account::find($id);
+        return view('account-add', compact('account'));
     }
-    public function saveClient(Request $request){
+    public function saveAccount(Request $request){
         $id = $request->id;
         if(!isset($id)){
             $data = [
-                'role' => 'client',
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
@@ -173,10 +154,10 @@ class ManagerController extends Controller
                 'status' => $request->status,
                 'remarks' => $request->remarks,
                 'type' => $request->type,
-                'represent' => $request->represent
+                'represent' => $request->represent,
+                'user_id' => Auth::user()->id
             ];
-            $user = User::create($data);
-            $user->givePermissionTo('client');
+            Account::create($data);
         }
         else{
             if(isset($request->password)){
@@ -209,16 +190,13 @@ class ManagerController extends Controller
                     'represent' => $request->represent
                 ];
             }
-            User::find($id)->update($data);
+            Account::find($id)->update($data);
         }
         return response()->json(['status' => true]);
     }
-    public function deleteClient(Request $request){
+    public function deleteAccount(Request $request){
         $id = $request->id;
-//        $user = User::find($id);
-//        $parent_id = $user->parent_id;
-//        User::where('parent_id', $parent_id)->delete();
-        User::where('id', $id)->delete();
+        Account::where('id', $id)->delete();
         return response()->json(['status' => true]);
     }
 }

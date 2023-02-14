@@ -10,7 +10,7 @@
                             <div
                                 class="d-flex justify-content-between align-items-center header-actions mx-2 row mt-75">
                                 <div class="col-sm-12 col-lg-4 d-flex justify-content-center justify-content-lg-start">
-                                    <h4 class="card-title mb-0">{{__('company-add')}}</h4>
+                                    <h4 class="card-title mb-0">{{isset($user) ? __('company-detail') : __('company-add')}}</h4>
                                 </div>
                             </div>
                         </div>

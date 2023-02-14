@@ -10,13 +10,13 @@
                             <div
                                 class="d-flex justify-content-between align-items-center header-actions mx-2 row mt-75">
                                 <div class="col-sm-12 col-lg-4 d-flex justify-content-center justify-content-lg-start">
-                                    <h4 class="card-title mb-0">{{__('client-manage')}}</h4>
+                                    <h4 class="card-title mb-0">{{__('account-manage')}}</h4>
                                 </div>
                                 <div class="col-sm-12 col-lg-8 ps-xl-75 ps-0">
                                     <div
                                         class="dt-action-buttons d-flex align-items-center justify-content-center justify-content-lg-end flex-lg-nowrap flex-wrap">
                                         <div class="dt-buttons">
-                                            <a class="dt-button add-new btn btn-primary" href="{{route('manager.client-add')}}">
+                                            <a class="dt-button add-new btn btn-primary" href="{{route('manager.account-add')}}">
                                                 <span>{{__('new-add')}}</span></a>
                                         </div>
                                     </div>
@@ -65,7 +65,7 @@
 
                                     <div class="col-md-2">
                                         <button class="btn btn-success mr-2" id="btn_get_table"
-                                                onclick="event.preventDefault();getTableData('{{route('manager.client-table')}}')">検　索
+                                                onclick="event.preventDefault();getTableData('{{route('manager.account-table')}}')">検　索
                                         </button>
                                     </div>
                                 </div>
@@ -82,7 +82,7 @@
     <!--end::Content-->
     <script>
         addEventListener('pageshow', (event) => {
-            getTableData('{{route('manager.client-table')}}');
+            getTableData('{{route('manager.account-table')}}');
         });
     </script>
 </x-app-layout>

@@ -35,12 +35,12 @@ Route::group(['middleware' => 'auth'], function (){
         Route::post('company-table', [ManagerController::class, 'tableCompany'])->name('manager.company-table');
 
         //勘定項目管理
-        Route::get('client-manage', [ManagerController::class, 'manageClient'])->name('manager.client-manage');
-        Route::get('client-add', [ManagerController::class, 'addClient'])->name('manager.client-add');
-        Route::get('client-edit/{id}', [ManagerController::class, 'editClient'])->name('manager.client-edit');
-        Route::post('client-save', [ManagerController::class, 'saveClient'])->name('manager.client-save');
-        Route::post('client-delete', [ManagerController::class, 'deleteClient'])->name('manager.client-delete');
-        Route::post('client-table', [ManagerController::class, 'tableClient'])->name('manager.client-table');
+        Route::get('account-manage', [ManagerController::class, 'manageAccount'])->name('manager.account-manage');
+        Route::get('account-add', [ManagerController::class, 'addAccount'])->name('manager.account-add');
+        Route::get('account-edit/{id}', [ManagerController::class, 'editAccount'])->name('manager.account-edit');
+        Route::post('account-save', [ManagerController::class, 'saveAccount'])->name('manager.account-save');
+        Route::post('account-delete', [ManagerController::class, 'deleteAccount'])->name('manager.account-delete');
+        Route::post('account-table', [ManagerController::class, 'tableAccount'])->name('manager.account-table');
     });
 });
 require __DIR__.'/auth.php';

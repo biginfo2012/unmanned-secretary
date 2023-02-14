@@ -21,6 +21,7 @@
     "register-date": "登録日",
     "edit": "編集",
     "company-add": "ユーザ追加",
+    "company-detail": "ユーザ詳細",
     "post-code": "郵便番号",
     "address": "住所",
     "represent": "代表者名",
@@ -86,11 +87,12 @@
     "please-select": "選択してください",
     "inquiry-content": "お問い合わせ内容",
     "send": "送信",
-    "client-manage": "勘定項目管理",
+    "account-manage": "勘定項目管理",
+    "account-detail": "勘定項目詳細",
     "type": "種別",
     "co-op": "法人",
     "sole-pro": "個人事業主",
     "alone": "個人",
-    "client-add": "勘定項目追加",
+    "account-add": "勘定項目追加",
     "client-name": "事業者名"
 }

@@ -38,9 +38,9 @@
                     <i data-feather="user"></i><span class="menu-title text-truncate" data-i18n="{{__('company-manage')}}">{{__('company-manage')}}</span>
                 </a>
             </li>
-            <li class="{{ str_contains(\Request::route()->getName(), 'client') ? 'active' : '' }} nav-item">
-                <a class="d-flex align-items-center" href="{{route('manager.client-manage')}}">
-                    <i data-feather="briefcase"></i><span class="menu-title text-truncate" data-i18n="{{__('client-manage')}}">{{__('client-manage')}}</span>
+            <li class="{{ str_contains(\Request::route()->getName(), 'account') ? 'active' : '' }} nav-item">
+                <a class="d-flex align-items-center" href="{{route('manager.account-manage')}}">
+                    <i data-feather="briefcase"></i><span class="menu-title text-truncate" data-i18n="{{__('account-manage')}}">{{__('account-manage')}}</span>
                 </a>
             </li>
         </ul>

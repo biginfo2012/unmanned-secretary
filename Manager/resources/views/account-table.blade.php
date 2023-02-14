@@ -26,7 +26,7 @@
             <td class="p-0 border text-center align-middle">{{$item['status'] == 1 ? __('enable') : __('stop')}}</td>
             <td class="p-0 border text-center align-middle">
                 <input type="hidden" value="{{$item['id']}}">
-                <a href="{{route('manager.client-edit', $item['id'])}}" class="btn btn-outline-dark waves-effect ex_change" style="padding: 8px; margin: 5px;">{{__('edit')}}</a>
+                <a href="{{route('manager.account-edit', $item['id'])}}" class="btn btn-outline-dark waves-effect ex_change" style="padding: 8px; margin: 5px;">{{__('edit')}}</a>
             </td>
         </tr>
     @endforeach

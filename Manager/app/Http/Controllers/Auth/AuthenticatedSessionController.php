@@ -30,13 +30,22 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request)
     {
         $request->authenticate();
+        $request->session()->regenerate();
 //        Permission::create(['name' => 'super']);
 //        Permission::create(['name' => 'company']);
 //        Permission::create(['name' => 'client']);
 //        $user = Auth::user();
 //        $user->givePermissionTo('super');
-        $request->session()->regenerate();
+        $user = Auth::user();
+        $role = $user->role;
+        if($role != 'manage'){
+            Auth::guard('web')->logout();
 
+            $request->session()->invalidate();
+
+            $request->session()->regenerateToken();
+            return redirect('/');
+        }
         return redirect()->intended(RouteServiceProvider::MANAGER_HOME);
     }
 
