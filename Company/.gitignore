@@ -15,4 +15,5 @@ yarn-error.log
 /.vscode
 /storage/
 /tests/
-/public/
+/public/theme/
+/public/upload/
