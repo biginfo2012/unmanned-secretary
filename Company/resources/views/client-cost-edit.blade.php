@@ -83,32 +83,29 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="mb-0 col-md-12">
+                                    <div class="mb-0 col-md-6">
                                         <div class="mb-0 row">
-                                            <label for="remarks" class="col-sm-1 col-form-label-lg"
+                                            <label for="remarks" class="col-sm-2 col-form-label-lg"
                                                    style="padding-right: 0">{{__('photo')}}</label>
-                                            <div class="col-sm-11" style="padding-left: 0">
+                                            <div class="col-sm-10" style="padding-left: 0">
                                                 @if(!empty($data['url']))
-                                                    <img class="mb-0" style="margin-top: 10px; max-width: 100%; height: auto" src="{{'http://localhost:8072/public/upload/'.$data['url']}}">
+                                                    <img class="mb-0" style="margin-top: 10px; max-width: 50%; height: auto" src="{{'https://e-strongest.jp/user/public/upload/'.$data['url']}}">
                                                 @endif
-
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="mb-0 col-md-12">
+                                    <div class="mb-0 col-md-6">
                                         <div class="mb-0 row">
-                                            <label for="remarks" class="col-sm-1 col-form-label-lg"
+                                            <label for="remarks" class="col-sm-2 col-form-label-lg"
                                                    style="padding-right: 0">{{__('content')}}</label>
-                                            <div class="col-sm-11" style="padding-left: 0">
+                                            <div class="col-sm-10" style="padding-left: 0">
                                                 <p class="mb-0" style="margin-top: 10px">{{$data['content']}}</p>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="mb-0 col-md-12">
                                         <div class="mb-0 row">
-                                            <label for="remarks" class="col-sm-1 col-form-label-lg"
+                                            <label for="remarks" class="col-sm-2 col-form-label-lg"
                                                    style="padding-right: 0">{{__('note')}}</label>
-                                            <div class="col-sm-11" style="padding-left: 0">
+                                            <div class="col-sm-10" style="padding-left: 0">
                                                 <p class="mb-0" style="margin-top: 10px">{{$data['note']}}</p>
                                             </div>
                                         </div>
