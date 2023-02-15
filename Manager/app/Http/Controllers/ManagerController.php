@@ -95,6 +95,7 @@ class ManagerController extends Controller
                 ];
             }
             User::find($id)->update($data);
+            User::where('parent_id', $id)->update(['status' => $request->status]);
         }
         return response()->json(['status' => true]);
     }
