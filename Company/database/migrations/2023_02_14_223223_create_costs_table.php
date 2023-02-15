@@ -16,9 +16,9 @@ class CreateCostsTable extends Migration
         Schema::create('costs', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id');
-            $table->integer('shop_id');
+            $table->integer('shop_id')->nullable();
             $table->date('pay_date')->nullable();
-            $table->string('total');
+            $table->string('total')->nullable();
             $table->string('percent')->nullable();
             $table->string('content')->nullable();
             $table->string('note')->nullable();

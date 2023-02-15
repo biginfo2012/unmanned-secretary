@@ -52,7 +52,7 @@
                                             <label for="contact" class="col-sm-2 col-form-label-lg"
                                                    style="padding-right: 0">{{__('shop-name')}}</label>
                                             <div class="col-sm-10" style="padding-left: 0">
-                                                <p class="mb-0" style="margin-top: 10px">{{$data['shop']['shop_name']}}</p>
+                                                <p class="mb-0" style="margin-top: 10px">{{isset($data['shop_id']) ? $data['shop']['shop_name'] : ""}}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -88,7 +88,10 @@
                                             <label for="remarks" class="col-sm-1 col-form-label-lg"
                                                    style="padding-right: 0">{{__('photo')}}</label>
                                             <div class="col-sm-11" style="padding-left: 0">
-                                                <img class="mb-0" style="margin-top: 10px; max-width: 100%; height: auto" src="{{asset('upload').'/'.$data['url']}}">
+                                                @if(!empty($data['url']))
+                                                    <img class="mb-0" style="margin-top: 10px; max-width: 100%; height: auto" src="{{'http://localhost:8072/public/upload/'.$data['url']}}">
+                                                @endif
+
                                             </div>
                                         </div>
                                     </div>

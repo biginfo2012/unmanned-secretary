@@ -127,8 +127,8 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12 text-center">
-                                        <button type="button" class="btn btn-primary me-1 btn_submit" onclick="event.preventDefault();saveForm('{{route('company.edit-info')}}', false)" tabindex="13">{{__('register')}}</button>
-                                        <label class="btn btn-outline-secondary waves-effect " tabindex="15" id="btn_cancel">{{__('cancel')}}</label>
+                                        <button type="button" class="btn btn-primary me-1 btn_submit" onclick="event.preventDefault();saveForm('{{route('company.edit-info')}}', false)" tabindex="13">{{__('edit')}}</button>
+{{--                                        <label class="btn btn-outline-secondary waves-effect " tabindex="15" id="btn_cancel">{{__('cancel')}}</label>--}}
                                     </div>
                                 </div>
                             </form>

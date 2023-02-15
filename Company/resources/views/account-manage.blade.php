@@ -35,7 +35,7 @@
                                                 <select class="form-select" id="type" name="type">
                                                     <option value="">{{__('all')}}</option>
                                                     <option value="1">{{__('co-op')}}</option>
-                                                    <option value="2">{{__('sole-pro')}}</option>
+                                                    <option value="2">{{__('solo-pro')}}</option>
                                                     <option value="3">{{__('alone')}}</option>
                                                 </select>
                                             </div>

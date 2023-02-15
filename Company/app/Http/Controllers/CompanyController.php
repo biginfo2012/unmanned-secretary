@@ -115,7 +115,6 @@ class CompanyController extends Controller
     {
         $user_id = $request->id;
         $data = Cost::with('user', 'shop')->where('user_id', $user_id)->orderBy('created_at', 'desc')->get();
-
         return view('client-cost-table', compact('data'));
     }
 
@@ -257,7 +256,6 @@ class CompanyController extends Controller
                 ];
             } else {
                 $data = [
-                    'user_code' => $request->user_code,
                     'name' => $request->name,
                     'email' => $request->email,
                     'post_code' => $request->post_code,

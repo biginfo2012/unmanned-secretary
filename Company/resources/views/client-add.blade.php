@@ -34,9 +34,9 @@
                                                    style="padding-right: 0; padding-top: 10px">{{__('type')}}</label>
                                             <div class="col-sm-10" style="padding-left: 0">
                                                 <select class="form-select" id="type" name="type" tabindex="2" data-index="2">
-                                                    <option value="1">{{__('co-op')}}</option>
-                                                    <option value="2">{{__('sole-pro')}}</option>
-                                                    <option value="3">{{__('alone')}}</option>
+                                                    <option value="1" {{isset($user) && $user->type == 1 ? 'selected' : ''}}>{{__('co-op')}}</option>
+                                                    <option value="2" {{isset($user) && $user->type == 2 ? 'selected' : ''}}>{{__('solo-pro')}}</option>
+                                                    <option value="3" {{isset($user) && $user->type == 3 ? 'selected' : ''}}>{{__('alone')}}</option>
                                                 </select>
                                             </div>
                                         </div>

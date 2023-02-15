@@ -13,7 +13,7 @@
     @foreach($data as $index => $item)
         <tr style="">
             <td class="p-0 border text-center align-middle">{{$index+1}}</td>
-            <td class="p-0 border text-left align-middle px-1">{{$item['shop']['shop_name']}}</td>
+            <td class="p-0 border text-left align-middle px-1">{{isset($item['shop_id']) ? $item['shop']['shop_name'] : ""}}</td>
             <td class="p-0 border text-left align-middle px-1">{{$item['total']}}</td>
             <td class="p-0 border text-center align-middle">{{date('Y/m/d', strtotime($item['created_at']))}}</td>
             <td class="p-0 border text-center align-middle">
