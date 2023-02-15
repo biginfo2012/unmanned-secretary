@@ -58,7 +58,6 @@ class ManagerController extends Controller
                 'remarks' => $request->remarks,
                 'plan_id' => $request->plan,
                 'represent' => $request->represent
-
             ];
             $user = User::create($data);
             $user->givePermissionTo('company');
@@ -101,7 +100,7 @@ class ManagerController extends Controller
     }
     public function deleteCompany(Request $request){
         $id = $request->id;
-        User::where('parent_id', $id)->delete();
+        //User::where('parent_id', $id)->delete();
         User::where('id', $id)->delete();
         return response()->json(['status' => true]);
     }
@@ -177,7 +176,6 @@ class ManagerController extends Controller
             }
             else{
                 $data = [
-                    'user_code' => $request->user_code,
                     'name' => $request->name,
                     'email' => $request->email,
                     'post_code' => $request->post_code,
