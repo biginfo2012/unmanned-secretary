@@ -116,18 +116,18 @@ class ManagerController extends Controller
         $user_id = Auth::user()->id;
         if (isset($status)){
             if(isset($type)){
-                $data = Account::where('user_id', $user_id)->where('status', $status)->where('type', $type)->where('contact', 'like', '%' . $contact . '%')->orderBy('created_at', 'desc')->get();
+                $data = Account::where('status', $status)->where('type', $type)->where('contact', 'like', '%' . $contact . '%')->orderBy('created_at', 'desc')->get();
             }
             else{
-                $data = Account::where('user_id', $user_id)->where('status', $status)->where('contact', 'like', '%' . $contact . '%')->orderBy('created_at', 'desc')->get();
+                $data = Account::where('status', $status)->where('contact', 'like', '%' . $contact . '%')->orderBy('created_at', 'desc')->get();
             }
         }
         else{
             if(isset($type)){
-                $data = Account::where('user_id', $user_id)->where('type', $type)->where('contact', 'like', '%' . $contact . '%')->orderBy('created_at', 'desc')->get();
+                $data = Account::where('type', $type)->where('contact', 'like', '%' . $contact . '%')->orderBy('created_at', 'desc')->get();
             }
             else{
-                $data = Account::where('user_id', $user_id)->where('contact', 'like', '%' . $contact . '%')->orderBy('created_at', 'desc')->get();
+                $data = Account::where('contact', 'like', '%' . $contact . '%')->orderBy('created_at', 'desc')->get();
             }
         }
 
