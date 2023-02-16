@@ -112,5 +112,11 @@
     "client-detail": "顧客詳細",
     "photo": "写真",
     "export": "エクスポート",
-    "report": "レポート出力"
+    "report": "レポート出力",
+    "icon": "アイコン",
+    "summary": "概要",
+    "account-item": "勘定項目",
+    "amount": "金額",
+    "tax": "消費税",
+    "import-date": "取込日"
 }

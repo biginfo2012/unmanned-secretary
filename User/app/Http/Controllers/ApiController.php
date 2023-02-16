@@ -120,10 +120,13 @@ class ApiController extends Controller
 
             $parseData = $this->getOCRInfo($path);
             $data = [
-                'shop_name' => $parseData->shop_name,
+                'shop_name' => $parseData->name,
                 'total' => $parseData->total,
                 'percent' => $parseData->percent,
-                'url' => asset('upload'). '/'. $filename
+                'url' => asset('upload'). '/'. $filename,
+                'year' => $parseData->year,
+                'month' => $parseData->month,
+                'day' => $parseData->day
             ];
 
             $responseData->result = $data;
@@ -269,11 +272,14 @@ by- ト No 4557-06 デー- 狼 52940-2942
 O77 Zam 2022/11/07 -
 ';
         $command = 'tesseract --tessdata-dir /home/ubuntu/tessdata_best '.$path.' - -l script/Japanese --psm 6';
-        //$content = shell_exec($command);
+        $content = shell_exec($command);
         Log::info($content);
-        $shop_name = '';
+        $name = '';
         $total = '';
         $percent = '';
+        $year = '';
+        $month = '';
+        $day = '';
         $line = strtok($content, PHP_EOL);
         $prevLine = $line;
         /*do something with the first line here...*/
@@ -283,14 +289,54 @@ O77 Zam 2022/11/07 -
             $line = strtok(PHP_EOL);
             if($isContainNumber) {
                 $splits = explode(' ', $line);
-                for($i = 0, $iMax = count($splits); $i < $iMax; $i ++) {
+                for($i = 0; $i < count($splits); $i ++) {
                     if(strlen($splits[$i]) > 1) {
-                        $shop_name = $splits[$i];
+                        $name = $splits[$i];
                         break;
                     }
                 }
                 $isContainNumber = false;
             } else {
+                if(str_contains($line, '年')) {
+                    $len = strlen($line);
+
+                    for($i = 0; $i < $len; $i++) {
+                        if ($line[$i] == '年') {
+                            for ($j = $i - 1; $j >= 0; $j--) {
+                                if ($line[$j] == ' ' || $line[$j] == ',' || $line[$j] == '.' || is_numeric($line[$j])) {
+                                    if (is_numeric($line[$j])) {
+                                        $year = $line[$j] . $year;
+                                    }
+                                } else {
+                                    break;
+                                }
+                            }
+                        }
+                        if ($line[$i] == '月') {
+                            for ($j = $i - 1; $j >= 0; $j--) {
+                                if ($line[$j] == ' ' || $line[$j] == ',' || $line[$j] == '.' || is_numeric($line[$j])) {
+                                    if (is_numeric($line[$j])) {
+                                        $month = $line[$j] . $month;
+                                    }
+                                } else {
+                                    break;
+                                }
+                            }
+                        }
+
+                        if ($line[$i] == '日') {
+                            for ($j = $i - 1; $j >= 0; $j--) {
+                                if ($line[$j] == ' ' || $line[$j] == ',' || $line[$j] == '.' || is_numeric($line[$j])) {
+                                    if (is_numeric($line[$j])) {
+                                        $day = $line[$j] . $day;
+                                    }
+                                } else {
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
                 if(str_contains($line, 'XXXXX')) {
                     $isContainNumber = true;
                 }
@@ -326,6 +372,9 @@ O77 Zam 2022/11/07 -
                             break;
                         }
                     }
+
+
+
                 }
             }
             $prevLine = $line;
@@ -334,9 +383,12 @@ O77 Zam 2022/11/07 -
         //the bit that frees up memory
         strtok('', '');
         $data = new stdClass();
-        $data -> shop_name = $shop_name;
+        $data -> name = $name;
         $data -> total = $total;
         $data -> percent = $percent;
+        $data -> year = $year;
+        $data -> month = $month;
+        $data -> day = $day;
         return $data;
     }
 }
