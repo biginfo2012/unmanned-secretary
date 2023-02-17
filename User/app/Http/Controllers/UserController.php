@@ -49,22 +49,29 @@ class UserController extends Controller
         $arr = array();
         foreach ($data as $index => $datum) {
             $tmp = [];
-            $tmp['shop_name'] = $datum->shop->shop_name;
+            $tmp['shop_name'] = !empty($datum->shop_id) ? $datum->shop->shop_name : "";
             $tmp['total'] = $datum->total;
+            $tmp['percent'] = $datum->percent;
             $tmp['pay_date'] = $datum->pay_date;
             $tmp['content'] = $datum->content;
             $tmp['note'] = $datum->note;
+            $tmp['created_at'] = $datum->created_at;
             array_push($arr, $tmp);
         }
         $data = $arr;
 
-        $array[] = array('NO', __('shop-name'), __('total'), __('pay-date'), __('content'), __('note'));
+        $array[] = array('NO', __('icon'), __('pay-date'), __('summary'), __('account-item'),
+            __('total'), __('tax'), __('import-date'), __('content'), __('note'));
         foreach ($data as $index => $item) {
             $array[] = array(
                 'NO' => $index + 1,
-                __('shop-name') => $item['shop_name'],
-                __('total') => $item['total'],
-                __('pay-date') => $item['pay_date'],
+                __('icon') => "",
+                __('pay-date') => date('Y/m/d', strtotime($item['pay_date'])),
+                __('summary') => $item['shop_name'],
+                __('account-item') => "",
+                __('total') => number_format($item['total']) . "円",
+                __('tax') => $item['percent'] . "%",
+                __('import-date') => date('Y/m/d', strtotime($item['created_at'])),
                 __('content') => $item['content'],
                 __('note') => $item['note']
             );

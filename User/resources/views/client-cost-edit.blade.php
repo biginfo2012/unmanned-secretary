@@ -44,45 +44,6 @@
                                     </div>
                                 </div>
                                 <div class="row mt-0">
-                                    <div class="col-md-12">
-                                        <h5 class="mb-0">{{__('cost-detail')}}</h5>
-                                    </div>
-                                    <div class="mb-0 col-md-6">
-                                        <div class="mb-0 row">
-                                            <label for="contact" class="col-sm-2 col-form-label-lg"
-                                                   style="padding-right: 0">{{__('shop-name')}}</label>
-                                            <div class="col-sm-10" style="padding-left: 0">
-                                                <p class="mb-0" style="margin-top: 10px">{{$data['shop']['shop_name']}}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mb-0 col-md-6">
-                                        <div class="mb-0 row">
-                                            <label for="contact" class="col-sm-2 col-form-label-lg"
-                                                   style="padding-right: 0">{{__('pay-date')}}</label>
-                                            <div class="col-sm-10" style="padding-left: 0">
-                                                <p class="mb-0" style="margin-top: 10px">{{$data['pay_date']}}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mb-0 col-md-6">
-                                        <div class="mb-0 row">
-                                            <label for="contact" class="col-sm-2 col-form-label-lg"
-                                                   style="padding-right: 0">{{__('total')}}</label>
-                                            <div class="col-sm-10" style="padding-left: 0">
-                                                <p class="mb-0" style="margin-top: 10px">{{$data['total']}}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mb-0 col-md-6">
-                                        <div class="mb-0 row">
-                                            <label for="contact" class="col-sm-2 col-form-label-lg"
-                                                   style="padding-right: 0">{{__('percent')}}</label>
-                                            <div class="col-sm-10" style="padding-left: 0">
-                                                <p class="mb-0" style="margin-top: 10px">{{$data['percent']}}</p>
-                                            </div>
-                                        </div>
-                                    </div>
                                     <div class="mb-0 col-md-6">
                                         <div class="mb-0 row">
                                             <label for="remarks" class="col-sm-2 col-form-label-lg"
@@ -95,6 +56,48 @@
                                         </div>
                                     </div>
                                     <div class="mb-0 col-md-6">
+                                        <div class="mb-0 row">
+                                            <label for="contact" class="col-sm-2 col-form-label-lg"
+                                                   style="padding-right: 0">{{__('summary')}}</label>
+                                            <div class="col-sm-10" style="padding-left: 0">
+                                                <p class="mb-0" style="margin-top: 10px">{{!empty($data['shop_id']) ? $data['shop']['shop_name'] : ""}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="mb-0 row">
+                                            <label for="contact" class="col-sm-2 col-form-label-lg"
+                                                   style="padding-right: 0">{{__('pay-date')}}</label>
+                                            <div class="col-sm-10" style="padding-left: 0">
+                                                <p class="mb-0" style="margin-top: 10px">{{date('Y/m/d', strtotime($data['pay_date']))}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="mb-0 row">
+                                            <label for="contact" class="col-sm-2 col-form-label-lg"
+                                                   style="padding-right: 0">{{__('account-item')}}</label>
+                                            <div class="col-sm-10" style="padding-left: 0">
+                                                <p class="mb-0" style="margin-top: 10px"></p>
+                                            </div>
+                                        </div>
+                                        <div class="mb-0 row">
+                                            <label for="contact" class="col-sm-2 col-form-label-lg"
+                                                   style="padding-right: 0">{{__('amount')}}</label>
+                                            <div class="col-sm-10" style="padding-left: 0">
+                                                <p class="mb-0" style="margin-top: 10px">{{number_format($data['total'])}}円</p>
+                                            </div>
+                                        </div>
+                                        <div class="mb-0 row">
+                                            <label for="contact" class="col-sm-2 col-form-label-lg"
+                                                   style="padding-right: 0">{{__('percent')}}</label>
+                                            <div class="col-sm-10" style="padding-left: 0">
+                                                <p class="mb-0" style="margin-top: 10px">{{$data['percent']}}％</p>
+                                            </div>
+                                        </div>
+                                        <div class="mb-0 row">
+                                            <label for="remarks" class="col-sm-2 col-form-label-lg"
+                                                   style="padding-right: 0">{{__('import-date')}}</label>
+                                            <div class="col-sm-10" style="padding-left: 0">
+                                                <p class="mb-0" style="margin-top: 10px">{{date('Y/m/d', strtotime($data['created_at']))}}</p>
+                                            </div>
+                                        </div>
                                         <div class="mb-0 row">
                                             <label for="remarks" class="col-sm-2 col-form-label-lg"
                                                    style="padding-right: 0">{{__('content')}}</label>
