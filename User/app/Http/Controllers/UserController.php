@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\InvoicesExport;
 use App\Models\Account;
 use App\Models\Cost;
+use App\Models\Shop;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -33,7 +34,35 @@ class UserController extends Controller
         $data = Cost::with('user', 'shop')->find($id);
         return view('client-cost-edit', compact('data'));
     }
-
+    public function saveCost(Request $request)
+    {
+        $id = $request->id;
+        $shop_name = $request->shop_name;
+        $shop_id = null;
+        if(isset($shop_name)){
+            $shop = Shop::where('shop_name', $shop_name)->first();
+            if(isset($shop)){
+                $shop_id = $shop->id;
+            }
+            else{
+                $shop_data = [
+                    'shop_name' => $shop_name
+                ];
+                $shop = Shop::create($shop_data);
+                $shop_id = $shop->id;
+            }
+        }
+        $data = [
+            'shop_id' => $shop_id,
+            'pay_date' => $request->pay_date,
+            'total' => $request->total,
+            'percent' => $request->percent,
+            'content' => $request->contents,
+            'note' => $request->note
+        ];
+        Cost::find($id)->update($data);
+        return response()->json(['status' => true]);
+    }
     public function deleteCost(Request $request)
     {
         $id = $request->id;

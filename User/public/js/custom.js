@@ -252,3 +252,14 @@ function exportExcel(url){
         }
     });
 }
+
+$(".flatpickr").flatpickr({
+    "locale": "ja",
+    dateFormat: "Y/m/d",
+    maxDate: "today",
+})
+$('#cost-img').click(function (e) {
+    let src = $(this).attr('src')
+    $('#imageModal').modal('show')
+    $('#modal-img').attr('src', src)
+});
