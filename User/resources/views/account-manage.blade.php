@@ -65,7 +65,7 @@
 
                                     <div class="col-md-2">
                                         <button class="btn btn-success mr-2" id="btn_get_table"
-                                                onclick="event.preventDefault();getTableData('{{route('client.account-table')}}')">検　索
+                                                onclick="event.preventDefault();getTableData('{{route('client.account-table')}}')">{{__('search')}}
                                         </button>
                                     </div>
                                 </div>
