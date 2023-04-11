@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Account;
+use App\Models\TaxType;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -110,88 +111,119 @@ class ManagerController extends Controller
         return view('account-manage');
     }
     public function tableAccount(Request $request){
-        $status = $request->status;
-        $contact = $request->contact;
-        $type = $request->type;
+        $subject = $request->subject;
+        $code = $request->code;
+        $keyword = $request->keyword;
         $user_id = Auth::user()->id;
-        if (isset($status)){
-            if(isset($type)){
-                $data = Account::where('status', $status)->where('type', $type)->where('contact', 'like', '%' . $contact . '%')->orderBy('created_at', 'desc')->get();
+        if(isset($subject)){
+            if(isset($code)){
+                if(isset($keyword)){
+                    $data = Account::with('tax')->where('code', 'like', '%' . $code . '%')->where('subject', 'like', '%' . $subject . '%')
+                        ->where('keyword', 'like', '%' . $keyword . '%')->where('user_id', $user_id)->orderBy('created_at', 'desc')->get();
+                }
+                else{
+                    $data = Account::with('tax')->where('code', 'like', '%' . $code . '%')->where('subject', 'like', '%' . $subject . '%')
+                        ->where('user_id', $user_id)->orderBy('created_at', 'desc')->get();
+                }
             }
             else{
-                $data = Account::where('status', $status)->where('contact', 'like', '%' . $contact . '%')->orderBy('created_at', 'desc')->get();
+                if(isset($keyword)){
+                    $data = Account::with('tax')->where('subject', 'like', '%' . $subject . '%')->where('keyword', 'like', '%' . $keyword . '%')
+                        ->where('user_id', $user_id)->orderBy('created_at', 'desc')->get();
+                }
+                else{
+                    $data = Account::with('tax')->where('subject', 'like', '%' . $subject . '%')
+                        ->where('user_id', $user_id)->orderBy('created_at', 'desc')->get();
+                }
             }
         }
         else{
-            if(isset($type)){
-                $data = Account::where('type', $type)->where('contact', 'like', '%' . $contact . '%')->orderBy('created_at', 'desc')->get();
+            if(isset($code)){
+                if(isset($keyword)){
+                    $data = Account::with('tax')->where('code', 'like', '%' . $code . '%')->where('keyword', 'like', '%' . $keyword . '%')
+                        ->where('user_id', $user_id)->orderBy('created_at', 'desc')->get();
+                }
+                else{
+                    $data = Account::with('tax')->where('code', 'like', '%' . $code . '%')->where('user_id', $user_id)
+                        ->orderBy('created_at', 'desc')->get();
+                }
             }
             else{
-                $data = Account::where('contact', 'like', '%' . $contact . '%')->orderBy('created_at', 'desc')->get();
+                if(isset($keyword)){
+                    $data = Account::with('tax')->where('keyword', 'like', '%' . $keyword . '%')->where('user_id', $user_id)
+                        ->orderBy('created_at', 'desc')->get();
+                }
+                else{
+                    $data = Account::with('tax')->where('user_id', $user_id)->orderBy('created_at', 'desc')->get();
+                }
             }
         }
 
+//        print_r($data);
+//        die();
         return view('account-table', compact('data'));
     }
     public function addAccount(){
-        return view('account-add');
+        $types = TaxType::all();
+        return view('account-add', compact('types'));
     }
     public function editAccount($id){
         $account = Account::find($id);
-        return view('account-add', compact('account'));
+        $types = TaxType::all();
+        return view('account-add', compact('account', 'types'));
     }
     public function saveAccount(Request $request){
         $id = $request->id;
         if(!isset($id)){
-            $data = [
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'post_code' => $request->post_code,
-                'address' => $request->address,
-                'contact' => $request->contact,
-                'charge' => $request->charge,
-                'status' => $request->status,
-                'remarks' => $request->remarks,
-                'type' => $request->type,
-                'represent' => $request->represent,
-                'user_id' => Auth::user()->id
-            ];
-            Account::create($data);
+            $subject = $request->subject;
+            $account = Account::where('subject', $subject)->first();
+            if(!isset($account)){
+                $data = [
+                    'subject' => $request->subject,
+                    'code' => $request->code,
+                    'assistant' => $request->assistant,
+                    'keyword' => $request->keyword,
+                    'type' => $request->type,
+                    'user_id' => Auth::user()->id
+                ];
+                Account::create($data);
+                return response()->json(['status' => true]);
+            }
+            return response()->json(['status' => false, 'result' => 'subject_already_exist']);
         }
         else{
-            if(isset($request->password)){
-                $data = [
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'password' => Hash::make($request->password),
-                    'post_code' => $request->post_code,
-                    'address' => $request->address,
-                    'contact' => $request->contact,
-                    'charge' => $request->charge,
-                    'status' => $request->status,
-                    'remarks' => $request->remarks,
-                    'type' => $request->type,
-                    'represent' => $request->represent
-                ];
+            $subject = $request->subject;
+            $account = Account::where('subject', $subject)->first();
+            if(isset($account)){
+                if($id == $account->id){
+                    $data = [
+                        'subject' => $request->subject,
+                        'code' => $request->code,
+                        'assistant' => $request->assistant,
+                        'keyword' => $request->keyword,
+                        'type' => $request->type
+                    ];
+                    Account::find($id)->update($data);
+                    return response()->json(['status' => true]);
+                }
+                else{
+                    return response()->json(['status' => false, 'result' => 'subject_already_exist']);
+                }
             }
             else{
                 $data = [
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'post_code' => $request->post_code,
-                    'address' => $request->address,
-                    'contact' => $request->contact,
-                    'charge' => $request->charge,
-                    'status' => $request->status,
-                    'remarks' => $request->remarks,
-                    'type' => $request->type,
-                    'represent' => $request->represent
+                    'subject' => $request->subject,
+                    'code' => $request->code,
+                    'assistant' => $request->assistant,
+                    'keyword' => $request->keyword,
+                    'type' => $request->type
                 ];
+                Account::find($id)->update($data);
+                return response()->json(['status' => true]);
             }
-            Account::find($id)->update($data);
+
         }
-        return response()->json(['status' => true]);
+
     }
     public function deleteAccount(Request $request){
         $id = $request->id;

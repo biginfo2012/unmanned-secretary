@@ -29,36 +29,25 @@
                                 <div class="row g-1 mb-md-0">
                                     <div class="col-md-2">
                                         <div class="mb-1 row">
-                                            <label for="type" class="col-sm-4 col-form-label-lg"
-                                                   style="padding-right: 0; padding-top: 10px">{{__('type')}}</label>
-                                            <div class="col-sm-8" style="padding-left: 0">
-                                                <select class="form-select" id="type" name="type">
-                                                    <option value="">{{__('all')}}</option>
-                                                    <option value="1">{{__('co-op')}}</option>
-                                                    <option value="2">{{__('solo-pro')}}</option>
-                                                    <option value="3">{{__('alone')}}</option>
-                                                </select>
+                                            <div class="col-sm-12">
+                                                <input type="text" class="form-control" id="colFormLabel" name="subject"
+                                                       placeholder="{{__('account-subject-name')}}">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-2">
                                         <div class="mb-1 row">
-                                            <label for="status" class="col-sm-3 col-form-label-lg"
-                                                   style="padding-right: 0; padding-top: 10px">{{__('status')}}</label>
-                                            <div class="col-sm-9" style="padding-left: 0">
-                                                <select class="form-select" id="status" name="status">
-                                                    <option value="">{{__('all')}}</option>
-                                                    <option value="1">{{__('enable')}}</option>
-                                                    <option value="0">{{__('stop')}}</option>
-                                                </select>
+                                            <div class="col-sm-12">
+                                                <input type="text" class="form-control" id="colFormLabel" name="code"
+                                                       placeholder="{{__('subject-code')}}">
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-2">
                                         <div class="mb-1 row">
                                             <div class="col-sm-12">
-                                                <input type="text" class="form-control" id="colFormLabel" name="contact"
-                                                       placeholder="{{__('please-input-contact-company')}}">
+                                                <input type="text" class="form-control" id="colFormLabel" name="keyword"
+                                                       placeholder="{{__('keyword')}}">
                                             </div>
                                         </div>
                                     </div>

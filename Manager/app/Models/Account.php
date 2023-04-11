@@ -9,6 +9,9 @@ class Account extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name', 'email', 'password', 'user_code', 'post_code', 'address', 'contact', 'represent', 'charge', 'status', 'type', 'remarks', 'user_id'
+        'subject', 'assistant', 'code', 'keyword', 'status', 'type', 'user_id'
     ];
+    public function tax(){
+        return $this->hasOne(TaxType::class, 'id', 'type');
+    }
 }

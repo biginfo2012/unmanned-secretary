@@ -37,6 +37,7 @@ Route::group(['middleware' => 'auth'], function (){
         Route::get('client-cost/{id}', [CompanyController::class, 'costClient'])->name('company.client-cost');
         Route::post('client-cost-table', [CompanyController::class, 'tableClientCost'])->name('company.client-cost-table');
         Route::get('client-cost-edit/{id}', [CompanyController::class, 'editClientCost'])->name('company.client-cost-edit');
+        Route::post('client-cost-save', [CompanyController::class, 'saveClientCost'])->name('company.client-cost-save');
         Route::post('client-cost-delete', [CompanyController::class, 'deleteClientCost'])->name('company.client-cost-delete');
         Route::post('client-cost-export-excel', [CompanyController::class, 'clientCostExportExcel'])->name('company.client-cost-export-excel');
         Route::get('client-cost-export-pdf/{id}', [CompanyController::class, 'clientCostExportPDF'])->name('company.client-cost-export-pdf');

@@ -125,6 +125,7 @@
 
 <!-- END: Page JS-->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
+
 <script src="{{ asset('js/custom.js') }}"></script>
 <script>
     let token = '{{csrf_token()}}';

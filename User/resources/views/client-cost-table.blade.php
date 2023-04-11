@@ -15,12 +15,17 @@
     <tbody>
 
     @foreach($data as $index => $item)
-        <tr style="">
+        <tr class="{{$item['status'] ? '' : 'table-info'}}">
             <td class="p-0 border text-end align-middle px-1">{{$index+1}}</td>
-            <td class="p-0 border text-center align-middle px-1"></td>
+            <td class="p-0 border text-start align-middle px-1">
+                <img src="{{asset('icon/icon.png')}}" style="width: 15px; height: 15px; margin-right: 5px;">
+                @if(empty($item['url']) || empty($item['pay_date']) || empty($item['shop_id']) || empty($item['account_id']) || empty($item['total']) || empty($item['percent']))
+                    <img src="{{asset('icon/warning.png')}}" style="width: 15px; height: 15px">
+                @endif
+            </td>
             <td class="p-0 border text-end align-middle px-1">{{date('Y/m/d', strtotime($item['pay_date']))}}</td>
             <td class="p-0 border text-left align-middle px-1">{{!empty($item['shop_id']) ? $item['shop']['shop_name'] : ""}}</td>
-            <td class="p-0 border text-center align-middle px-1"></td>
+            <td class="p-0 border text-center align-middle px-1">{{!empty($item['account_id']) ? $item['account']['subject'] : ""}}</td>
             <td class="p-0 border text-end align-middle px-1">{{number_format($item['total'])}}円</td>
             <td class="p-0 border text-center align-middle px-1">{{$item['percent']}}％</td>
             <td class="p-0 border text-end align-middle px-1">{{date('Y/m/d', strtotime($item['created_at']))}}</td>

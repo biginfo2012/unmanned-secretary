@@ -118,5 +118,11 @@
     "account-item": "勘定項目",
     "amount": "金額",
     "tax": "消費税",
-    "import-date": "取込日"
+    "import-date": "取込日",
+    "account-subject": "勘定科目",
+    "account-subject-name": "勘定科目名",
+    "assi-subject": "補助科目",
+    "subject-code": "科目コード",
+    "tax-type": "税区分",
+    "keyword": "検索キー"
 }

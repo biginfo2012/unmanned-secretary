@@ -125,7 +125,12 @@ function saveForm(url, refresh=true){
                     }
                 }
                 else {
-                    toastr.warning("失敗しました。");
+                    if(response.result == 'subject_already_exist'){
+                        toastr.warning("勘定科目名が既に存在します。")
+                    }
+                    else{
+                        toastr.warning("失敗しました。");
+                    }
                 }
 
 
@@ -181,7 +186,7 @@ function deleteData(id, url){
                         Swal.fire({
                             icon: 'success',
                             title: '削除しました！',
-                            text: '削除しました！',
+                            // text: '削除しました！',
                             customClass: {
                                 confirmButton: 'btn btn-success'
                             }
@@ -252,3 +257,13 @@ function exportExcel(url){
         }
     });
 }
+$(".flatpickr").flatpickr({
+    "locale": "ja",
+    dateFormat: "Y/m/d",
+    maxDate: "today",
+})
+$('#cost-img').click(function (e) {
+    let src = $(this).attr('src')
+    $('#imageModal').modal('show')
+    $('#modal-img').attr('src', src)
+});

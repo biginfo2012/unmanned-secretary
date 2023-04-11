@@ -125,7 +125,13 @@ function saveForm(url, refresh=true){
                     }
                 }
                 else {
-                    toastr.warning("失敗しました。");
+                    if(response.result == 'subject_already_exist'){
+                        toastr.warning("勘定科目名が既に存在します。")
+                    }
+                    else{
+                        toastr.warning("失敗しました。");
+                    }
+
                 }
 
 
@@ -181,7 +187,7 @@ function deleteData(id, url){
                         Swal.fire({
                             icon: 'success',
                             title: '削除しました！',
-                            text: '削除しました！',
+                            // text: '削除しました！',
                             customClass: {
                                 confirmButton: 'btn btn-success'
                             }

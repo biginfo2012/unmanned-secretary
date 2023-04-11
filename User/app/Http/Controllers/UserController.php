@@ -6,6 +6,7 @@ use App\Exports\InvoicesExport;
 use App\Models\Account;
 use App\Models\Cost;
 use App\Models\Shop;
+use App\Models\TaxType;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,15 +25,19 @@ class UserController extends Controller
     public function tableCost(Request $request)
     {
         $user_id = $request->id;
-        $data = Cost::with('user', 'shop')->where('user_id', $user_id)->orderBy('created_at', 'desc')->get();
-
+        $data = Cost::with('user', 'shop', 'account')->where('user_id', $user_id)->orderBy('created_at', 'desc')->get();
         return view('client-cost-table', compact('data'));
     }
 
     public function editCost($id)
     {
+        $user_id = Auth::user()->id;
+        $parent_id = Auth::user()->parent_id;
+        $users = [1, $parent_id, $user_id];
+        $accounts = Account::with('tax')->whereIn('user_id', $users)->orderBy('created_at', 'desc')->get();
         $data = Cost::with('user', 'shop')->find($id);
-        return view('client-cost-edit', compact('data'));
+        Cost::find($id)->update(['status' => 1]);
+        return view('client-cost-edit', compact('data', 'accounts'));
     }
     public function saveCost(Request $request)
     {
@@ -58,7 +63,8 @@ class UserController extends Controller
             'total' => $request->total,
             'percent' => $request->percent,
             'content' => $request->contents,
-            'note' => $request->note
+            'note' => $request->note,
+            'account_id' => $request->account_id
         ];
         Cost::find($id)->update($data);
         return response()->json(['status' => true]);
@@ -79,6 +85,7 @@ class UserController extends Controller
         foreach ($data as $index => $datum) {
             $tmp = [];
             $tmp['shop_name'] = !empty($datum->shop_id) ? $datum->shop->shop_name : "";
+            $tmp['account'] = !empty($datum->account) ? $datum->account->subject : "";
             $tmp['total'] = $datum->total;
             $tmp['percent'] = $datum->percent;
             $tmp['pay_date'] = $datum->pay_date;
@@ -89,15 +96,14 @@ class UserController extends Controller
         }
         $data = $arr;
 
-        $array[] = array('NO', __('icon'), __('pay-date'), __('summary'), __('account-item'),
+        $array[] = array('NO', __('pay-date'), __('summary'), __('account-item'),
             __('total'), __('tax'), __('import-date'), __('content'), __('note'));
         foreach ($data as $index => $item) {
             $array[] = array(
                 'NO' => $index + 1,
-                __('icon') => "",
                 __('pay-date') => date('Y/m/d', strtotime($item['pay_date'])),
                 __('summary') => $item['shop_name'],
-                __('account-item') => "",
+                __('account-item') =>  $item['account'],
                 __('total') => number_format($item['total']) . "円",
                 __('tax') => $item['percent'] . "%",
                 __('import-date') => date('Y/m/d', strtotime($item['created_at'])),
@@ -127,101 +133,125 @@ class UserController extends Controller
         return $pdf->download('経費一覧.pdf');
     }
 
-    public function manageAccount()
-    {
+    public function manageAccount(){
         return view('account-manage');
     }
-
-    public function tableAccount(Request $request)
-    {
-        $status = $request->status;
-        $contact = $request->contact;
-        $type = $request->type;
+    public function tableAccount(Request $request){
+        $subject = $request->subject;
+        $code = $request->code;
+        $keyword = $request->keyword;
         $user_id = Auth::user()->id;
-        if (isset($status)) {
-            if (isset($type)) {
-                $data = Account::where('user_id', $user_id)->where('status', $status)->where('type', $type)->where('contact', 'like', '%' . $contact . '%')->orderBy('created_at', 'desc')->get();
-            } else {
-                $data = Account::where('user_id', $user_id)->where('status', $status)->where('contact', 'like', '%' . $contact . '%')->orderBy('created_at', 'desc')->get();
+        $parent_id = Auth::user()->parent_id;
+        $users = [1, $parent_id, $user_id];
+        if(isset($subject)){
+            if(isset($code)){
+                if(isset($keyword)){
+                    $data = Account::with('tax')->where('code', 'like', '%' . $code . '%')->where('subject', 'like', '%' . $subject . '%')
+                        ->where('keyword', 'like', '%' . $keyword . '%')->whereIn('user_id', $users)->orderBy('user_id', 'desc')->orderBy('created_at', 'desc')->get();
+                }
+                else{
+                    $data = Account::with('tax')->where('code', 'like', '%' . $code . '%')->where('subject', 'like', '%' . $subject . '%')
+                        ->whereIn('user_id', $users)->orderBy('user_id', 'desc')->orderBy('created_at', 'desc')->get();
+                }
             }
-        } else {
-            if (isset($type)) {
-                $data = Account::where('user_id', $user_id)->where('type', $type)->where('contact', 'like', '%' . $contact . '%')->orderBy('created_at', 'desc')->get();
-            } else {
-                $data = Account::where('user_id', $user_id)->where('contact', 'like', '%' . $contact . '%')->orderBy('created_at', 'desc')->get();
+            else{
+                if(isset($keyword)){
+                    $data = Account::with('tax')->where('subject', 'like', '%' . $subject . '%')->where('keyword', 'like', '%' . $keyword . '%')
+                        ->whereIn('user_id', $users)->orderBy('user_id', 'desc')->orderBy('created_at', 'desc')->get();
+                }
+                else{
+                    $data = Account::with('tax')->where('subject', 'like', '%' . $subject . '%')
+                        ->whereIn('user_id', $users)->orderBy('user_id', 'desc')->orderBy('created_at', 'desc')->get();
+                }
+            }
+        }
+        else{
+            if(isset($code)){
+                if(isset($keyword)){
+                    $data = Account::with('tax')->where('code', 'like', '%' . $code . '%')->where('keyword', 'like', '%' . $keyword . '%')
+                        ->whereIn('user_id', $users)->orderBy('user_id', 'desc')->orderBy('created_at', 'desc')->get();
+                }
+                else{
+                    $data = Account::with('tax')->where('code', 'like', '%' . $code . '%')->whereIn('user_id', $users)
+                        ->orderBy('user_id', 'desc')->orderBy('created_at', 'desc')->get();
+                }
+            }
+            else{
+                if(isset($keyword)){
+                    $data = Account::with('tax')->where('keyword', 'like', '%' . $keyword . '%')->whereIn('user_id', $users)
+                        ->orderBy('user_id', 'desc')->orderBy('created_at', 'desc')->get();
+                }
+                else{
+                    $data = Account::with('tax')->whereIn('user_id', $users)->orderBy('user_id', 'desc')->orderBy('created_at', 'desc')->get();
+                }
             }
         }
 
+//        print_r($data);
+//        die();
         return view('account-table', compact('data'));
     }
-
-    public function addAccount()
-    {
-        return view('account-add');
+    public function addAccount(){
+        $types = TaxType::all();
+        return view('account-add', compact('types'));
     }
-
-    public function editAccount($id)
-    {
+    public function editAccount($id){
         $account = Account::find($id);
-        return view('account-add', compact('account'));
+        $types = TaxType::all();
+        return view('account-add', compact('account', 'types'));
     }
-
-    public function saveAccount(Request $request)
-    {
+    public function saveAccount(Request $request){
         $id = $request->id;
-        if (!isset($id)) {
-            $data = [
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'post_code' => $request->post_code,
-                'address' => $request->address,
-                'contact' => $request->contact,
-                'charge' => $request->charge,
-                'status' => $request->status,
-                'remarks' => $request->remarks,
-                'type' => $request->type,
-                'represent' => $request->represent,
-                'user_id' => Auth::user()->id
-            ];
-            Account::create($data);
-        } else {
-            if (isset($request->password)) {
+        if(!isset($id)){
+            $subject = $request->subject;
+            $account = Account::where('subject', $subject)->first();
+            if(!isset($account)){
                 $data = [
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'password' => Hash::make($request->password),
-                    'post_code' => $request->post_code,
-                    'address' => $request->address,
-                    'contact' => $request->contact,
-                    'charge' => $request->charge,
-                    'status' => $request->status,
-                    'remarks' => $request->remarks,
+                    'subject' => $request->subject,
+                    'code' => $request->code,
+                    'assistant' => $request->assistant,
+                    'keyword' => $request->keyword,
                     'type' => $request->type,
-                    'represent' => $request->represent
+                    'user_id' => Auth::user()->id
                 ];
-            } else {
-                $data = [
-                    'user_code' => $request->user_code,
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'post_code' => $request->post_code,
-                    'address' => $request->address,
-                    'contact' => $request->contact,
-                    'charge' => $request->charge,
-                    'status' => $request->status,
-                    'remarks' => $request->remarks,
-                    'type' => $request->type,
-                    'represent' => $request->represent
-                ];
+                Account::create($data);
+                return response()->json(['status' => true]);
             }
-            Account::find($id)->update($data);
+            return response()->json(['status' => false, 'result' => 'subject_already_exist']);
         }
-        return response()->json(['status' => true]);
+        else{
+            $subject = $request->subject;
+            $account = Account::where('subject', $subject)->first();
+            if(isset($account)){
+                if($id == $account->id){
+                    $data = [
+                        'subject' => $request->subject,
+                        'code' => $request->code,
+                        'assistant' => $request->assistant,
+                        'keyword' => $request->keyword,
+                        'type' => $request->type
+                    ];
+                    Account::find($id)->update($data);
+                    return response()->json(['status' => true]);
+                }
+                else{
+                    return response()->json(['status' => false, 'result' => 'subject_already_exist']);
+                }
+            }
+            else{
+                $data = [
+                    'subject' => $request->subject,
+                    'code' => $request->code,
+                    'assistant' => $request->assistant,
+                    'keyword' => $request->keyword,
+                    'type' => $request->type
+                ];
+                Account::find($id)->update($data);
+                return response()->json(['status' => true]);
+            }
+        }
     }
-
-    public function deleteAccount(Request $request)
-    {
+    public function deleteAccount(Request $request){
         $id = $request->id;
         Account::where('id', $id)->delete();
         return response()->json(['status' => true]);

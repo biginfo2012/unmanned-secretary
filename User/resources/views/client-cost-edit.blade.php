@@ -6,7 +6,16 @@
             cursor: pointer;
             transition: 0.3s;
         }
-
+        .img-viewer{
+            width: 100% !important;
+            height: 100% !important;
+        }
+        .viewer-download{
+            background-image: url({{asset('icon/download.png')}});
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 17px;
+        }
         #cost-img:hover {opacity: 0.7;}
     </style>
     <div class="content-body">
@@ -54,13 +63,12 @@
                                 </div>
                                 <div class="row mt-0">
                                     <div class="mb-0 col-md-6">
-                                        <div class="mb-0 row">
+                                        <div class="mb-0 row" style="height: 100%;">
                                             <label for="remarks" class="col-sm-2 col-form-label-lg"
-                                                   style="padding-right: 0">{{__('photo')}}</label>
-                                            <div class="col-sm-10" style="padding-left: 0">
+                                                   style="padding-right: 0; align-self: auto">{{__('photo')}}</label>
+                                            <div class="col-sm-9">
                                                 @if(!empty($data['url']))
-                                                    <img class="mb-0" id="cost-img" style="margin-top: 10px; max-width: 50%; max-height: 440px; width: auto; height: auto; cursor: pointer"
-                                                         src="{{asset('upload').'/'.$data['url']}}">
+                                                    <img class="d-none" id="image" src="{{asset('upload').'/'.$data['url']}}">
                                                 @endif
                                             </div>
                                         </div>
@@ -68,7 +76,7 @@
                                     <div class="mb-0 col-md-6">
                                         <div class="mb-0 row">
                                             <label for="shop-name" class="col-sm-2 col-form-label-lg"
-                                                   style="padding-right: 0">{{__('summary')}}</label>
+                                                   style="padding-right: 0">{{__('summary')}} <span class="color-red-tmp">*</span></label>
                                             <div class="col-sm-10" style="padding-left: 0">
                                                 <input type="text" id="shop-name" class="form-control" name="shop_name"
                                                        value="{{!empty($data['shop_id']) ? $data['shop']['shop_name'] : ""}}" tabindex="1" data-index="1"/>
@@ -76,22 +84,26 @@
                                         </div>
                                         <div class="mb-0 row">
                                             <label for="pay-date" class="col-sm-2 col-form-label-lg"
-                                                   style="padding-right: 0">{{__('pay-date')}}</label>
+                                                   style="padding-right: 0">{{__('pay-date')}} <span class="color-red-tmp">*</span></label>
                                             <div class="col-sm-10" style="padding-left: 0">
                                                 <input type="text" class="form-control flatpickr" id="pay-date" name="pay_date" placeholder="YYYY/MM/DD" required tabindex="2" data-index="2"
                                                        value="{{date('Y/m/d', strtotime($data['pay_date']))}}"/>
                                             </div>
                                         </div>
                                         <div class="mb-0 row">
-                                            <label for="contact" class="col-sm-2 col-form-label-lg"
+                                            <label for="account_id" class="col-sm-2 col-form-label-lg"
                                                    style="padding-right: 0">{{__('account-item')}}</label>
                                             <div class="col-sm-10" style="padding-left: 0">
-                                                <p class="mb-0" style="margin-top: 10px"></p>
+                                                <select class="form-select" id="account_id" name="account_id" tabindex="2" data-index="2">
+                                                    @foreach($accounts as $account)
+                                                        <option value="{{$account->id}}" {{!empty($data['account_id']) && $account->id == $data['account_id'] ? 'selected' : ''}}>{{$account->subject}}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="mb-0 row">
                                             <label for="total" class="col-sm-2 col-form-label-lg"
-                                                   style="padding-right: 0">{{__('amount')}}</label>
+                                                   style="padding-right: 0">{{__('amount')}} <span class="color-red-tmp">*</span></label>
                                             <div class="col-sm-10" style="padding-left: 0">
                                                 <div class="input-group input-group-merge">
                                                     <input type="number" class="form-control" id="total" name="total" placeholder="YYYY/MM/DD" tabindex="4" data-index="4"
@@ -104,11 +116,10 @@
                                             <label for="percent" class="col-sm-2 col-form-label-lg"
                                                    style="padding-right: 0">{{__('percent')}}</label>
                                             <div class="col-sm-10" style="padding-left: 0">
-                                                <div class="input-group input-group-merge">
-                                                    <input type="number" class="form-control" id="percent" name="percent" tabindex="5" data-index="5"
-                                                           value="{{$data['percent']}}"/>
-                                                    <span class="input-group-text">％</span>
-                                                </div>
+                                                <select class="form-select" id="percent" name="percent" tabindex="2" data-index="2">
+                                                    <option value="8" {{$data['percent'] == 8 ? 'selected' : ''}}>8％</option>
+                                                    <option value="10" {{$data['percent'] == 10 ? 'selected' : ''}}>10％</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="row" style="margin-bottom: 5px">
@@ -136,8 +147,8 @@
                                 </div>
                                 <div class="row mt-1">
                                     <div class="col-12 text-center">
-                                        <button type="button" class="btn btn-primary me-1 btn_submit" onclick="event.preventDefault();saveForm('{{route('client.cost-save')}}')" tabindex="8">{{__('edit')}}</button>
                                         <button type="reset" class="btn btn-dark waves-effect waves-float waves-light me-1" onclick="event.preventDefault();deleteData({{$data->id}}, '{{route('client.cost-delete')}}')" tabindex="9">{{__('delete')}}</button>
+                                        <button type="button" class="btn btn-primary me-1 btn_submit" onclick="event.preventDefault();saveForm('{{route('client.cost-save')}}')" tabindex="8">{{__('edit')}}</button>
                                         <label class="btn btn-outline-secondary waves-effect " tabindex="10" id="btn_cancel">{{__('cancel')}}</label>
                                     </div>
                                 </div>
@@ -164,4 +175,36 @@
         </div>
     </div>
     <!--end::Content-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.3/viewer.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.3/viewer.min.css">
+    <script>
+        let image = document.getElementById('image')
+        const viewer = new Viewer(image, {
+            className: "img-viewer",
+            inline: true,
+            title: false,
+            toolbar: {
+                zoomIn: function (){
+                    viewer.zoom(0.5);
+                },
+                zoomOut: function (){
+                    viewer.zoom(-0.5);
+                },
+                // oneToOne: 4,
+                // reset: 4,
+                rotateLeft: 1,
+                rotateRight: 1,
+                // flipHorizontal: 4,
+                // flipVertical: 4,
+                download: function () {
+                    const a = document.createElement('a');
+                    a.href = viewer.image.src;
+                    a.download = viewer.image.alt;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                },
+            },
+        });
+    </script>
 </x-app-layout>
