@@ -44,7 +44,7 @@ class UserController extends Controller
         $id = $request->id;
         $shop_name = $request->shop_name;
         $shop_id = null;
-        if(isset($shop_name)){
+        if(!empty($shop_name)){
             $shop = Shop::where('shop_name', $shop_name)->first();
             if(isset($shop)){
                 $shop_id = $shop->id;

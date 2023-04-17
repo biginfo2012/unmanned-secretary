@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rules;
 use Mockery\Exception;
 use stdClass;
+//use Thread;
 
 class ApiController extends Controller
 {
@@ -94,7 +94,8 @@ class ApiController extends Controller
 
         $validator = Validator::make($input,
             [
-                'image' => ['required']
+                'image' => ['required'],
+                'type' => ['required']
             ]);
 
         $responseData = new ApiResponseData($request);
@@ -105,12 +106,16 @@ class ApiController extends Controller
                 if ($errors->has('image')) {
                     $responseData->message =  self::ERR_INVALID_IMAGE;
                 }
+                if ($errors->has('type')) {
+                    $responseData->message =  self::ERR_INVALID_TYPE;
+                }
                 return response()->json($responseData);
             }
         }
         catch (Exception $e){
             Log::info('$e : ' . $e->getMessage());
         }
+        $type = $request->type;
         if($request->hasFile('image')) {
             $file = $request->file('image');
             $filename = uniqid('file_', true) . '.' . $file->getClientOriginalExtension();
@@ -118,18 +123,28 @@ class ApiController extends Controller
             $file->move($destinationPath, $filename);
             $path = public_path(). '/upload/'. $filename;
 
-            $parseData = $this->getOCRInfo($path);
-            $data = [
-                'shop_name' => $parseData->name,
-                'total' => $parseData->total,
-                'percent' => $parseData->percent,
-                'url' => asset('upload'). '/'. $filename,
-                'year' => $parseData->year,
-                'month' => $parseData->month,
-                'day' => $parseData->day
-            ];
-
-            $responseData->result = $data;
+            if($type == 1){
+                $parseData = $this->getOCRInfo($path);
+                $data = [
+                    'shop_name' => $parseData->name,
+                    'total' => $parseData->total,
+                    'percent' => $parseData->percent,
+                    'url' => asset('upload'). '/'. $filename,
+                    'year' => $parseData->year,
+                    'month' => $parseData->month,
+                    'day' => $parseData->day
+                ];
+                $responseData->result = $data;
+            }
+            else{
+                $data = [
+                    'user_id' => Auth::user()->id,
+                    'url' => $filename,
+                    'type' => 0
+                ];
+                Cost::create($data);
+            }
+            Log::info("AsyncOperation End: " . date('d-m-y h:i:s'));
             $responseData->message = "success";
             $responseData->status = self::SUCCESS;
             return response()->json($responseData);
@@ -178,7 +193,7 @@ class ApiController extends Controller
 //        }
         $shop_name = $request->shop_name;
         $shop_id = null;
-        if(isset($shop_name)){
+        if(!empty($shop_name)){
             $shop = Shop::where('shop_name', $shop_name)->first();
             if(isset($shop)){
                 $shop_id = $shop->id;
@@ -289,7 +304,7 @@ O77 Zam 2022/11/07 -
             $line = strtok(PHP_EOL);
             if($isContainNumber) {
                 $splits = explode(' ', $line);
-                for($i = 0; $i < count($splits); $i ++) {
+                for($i = 0, $iMax = count($splits); $i < $iMax; $i ++) {
                     if(strlen($splits[$i]) > 1) {
                         $name = $splits[$i];
                         break;
@@ -372,9 +387,6 @@ O77 Zam 2022/11/07 -
                             break;
                         }
                     }
-
-
-
                 }
             }
             $prevLine = $line;

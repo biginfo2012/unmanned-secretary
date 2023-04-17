@@ -23,11 +23,11 @@
                     <img src="{{asset('icon/warning.png')}}" style="width: 15px; height: 15px">
                 @endif
             </td>
-            <td class="p-0 border text-end align-middle px-1">{{date('Y/m/d', strtotime($item['pay_date']))}}</td>
+            <td class="p-0 border text-end align-middle px-1">{{!empty($item['pay_date']) ? date('Y/m/d', strtotime($item['pay_date'])) : ""}}</td>
             <td class="p-0 border text-left align-middle px-1">{{!empty($item['shop_id']) ? $item['shop']['shop_name'] : ""}}</td>
             <td class="p-0 border text-center align-middle px-1">{{!empty($item['account_id']) ? $item['account']['subject'] : ""}}</td>
-            <td class="p-0 border text-end align-middle px-1">{{number_format($item['total'])}}円</td>
-            <td class="p-0 border text-center align-middle px-1">{{$item['percent']}}％</td>
+            <td class="p-0 border text-end align-middle px-1">{{!empty($item['total']) ? number_format($item['total']) . "円": ""}}</td>
+            <td class="p-0 border text-center align-middle px-1">{{!empty($item['percent']) ? $item['percent'] . "%" : ""}}</td>
             <td class="p-0 border text-end align-middle px-1">{{date('Y/m/d', strtotime($item['created_at']))}}</td>
             <td class="p-0 border text-center align-middle">
                 <input type="hidden" value="{{$item['id']}}">
