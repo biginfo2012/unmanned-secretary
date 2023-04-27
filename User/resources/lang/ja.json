@@ -124,5 +124,13 @@
     "assi-subject": "補助科目",
     "subject-code": "科目コード",
     "tax-type": "税区分",
-    "keyword": "検索キー"
+    "keyword": "検索キー",
+    "cost-code": "レシートID",
+    "my-detail": "基本情報",
+    "account-detail-type": "会計ソフト",
+    "change": "変更",
+    "account-type": "出力形式",
+    "type-setting": "会計ソフト設定",
+    "save": "保存",
+    "please-select-soft": "会計ソフトを選択してください。"
 }

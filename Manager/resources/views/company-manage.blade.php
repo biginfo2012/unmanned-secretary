@@ -81,5 +81,6 @@
         addEventListener('pageshow', (event) => {
             getTableData('{{route('manager.company-table')}}');
         });
+        let change_url = '{{route('manager.company-change-status')}}'
     </script>
 </x-app-layout>

@@ -21,23 +21,20 @@
                                 <div class="row">
                                     <div class="mb-1 col-md-6">
                                         <div class="mb-1 row">
-                                            <label for="client-name" class="col-sm-2 col-form-label-lg"
-                                                   style="padding-right: 0">{{__('client-name')}} <span class="color-red-tmp">*</span></label>
+                                            <label for="company-code" class="col-sm-2 col-form-label-lg"
+                                                   style="padding-right: 0">{{__('user-code')}}</label>
                                             <div class="col-sm-10" style="padding-left: 0">
-                                                <input type="text" id="client-name" class="form-control" name="name" placeholder="" value="{{isset($user) ? $user->name : ''}}" required tabindex="1" data-index="1"/>
+                                                <input type="text" id="company-code" class="form-control" placeholder="" value="{{isset($user) ? $user->user_code : $code}}" tabindex="1" disabled data-index="1"/>
+                                                <input type="hidden" name="user_code" value="{{isset($user) ? $user->user_code : $code}}"/>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="mb-1 col-md-6">
                                         <div class="mb-1 row">
-                                            <label for="type" class="col-sm-2 col-form-label-lg"
-                                                   style="padding-right: 0; padding-top: 10px">{{__('type')}}</label>
+                                            <label for="client-name" class="col-sm-2 col-form-label-lg"
+                                                   style="padding-right: 0">{{__('client-name')}} <span class="color-red-tmp">*</span></label>
                                             <div class="col-sm-10" style="padding-left: 0">
-                                                <select class="form-select" id="type" name="type" tabindex="2" data-index="2">
-                                                    <option value="1" {{isset($user) && $user->type == 1 ? 'selected' : ''}}>{{__('co-op')}}</option>
-                                                    <option value="2" {{isset($user) && $user->type == 2 ? 'selected' : ''}}>{{__('solo-pro')}}</option>
-                                                    <option value="3" {{isset($user) && $user->type == 3 ? 'selected' : ''}}>{{__('alone')}}</option>
-                                                </select>
+                                                <input type="text" id="client-name" class="form-control" name="name" placeholder="" value="{{isset($user) ? $user->name : ''}}" required tabindex="1" data-index="1"/>
                                             </div>
                                         </div>
                                     </div>
@@ -61,6 +58,19 @@
                                     </div>
                                 </div>
                                 <div class="row">
+                                    <div class="mb-1 col-md-6">
+                                        <div class="mb-1 row">
+                                            <label for="type" class="col-sm-2 col-form-label-lg"
+                                                   style="padding-right: 0; padding-top: 10px">{{__('type')}}</label>
+                                            <div class="col-sm-10" style="padding-left: 0">
+                                                <select class="form-select" id="type" name="type" tabindex="2" data-index="2">
+                                                    <option value="1" {{isset($user) && $user->type == 1 ? 'selected' : ''}}>{{__('co-op')}}</option>
+                                                    <option value="2" {{isset($user) && $user->type == 2 ? 'selected' : ''}}>{{__('solo-pro')}}</option>
+                                                    <option value="3" {{isset($user) && $user->type == 3 ? 'selected' : ''}}>{{__('alone')}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="mb-1 col-md-6">
                                         <div class="mb-1 row">
                                             <label for="post-code" class="col-sm-2 col-form-label-lg"
@@ -88,6 +98,8 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="row">
                                     <div class="mb-1 col-md-6">
                                         <div class="mb-1 row">
                                             <label for="charge" class="col-sm-2 col-form-label-lg"
@@ -97,8 +109,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row">
                                     <div class="mb-1 col-md-6">
                                         <div class="mb-1 row">
                                             <label for="contact" class="col-sm-2 col-form-label-lg"
@@ -108,7 +118,18 @@
                                             </div>
                                         </div>
                                     </div>
-
+                                    <div class="mb-1 col-md-6">
+                                        <div class="mb-1 row">
+                                            <label for="status" class="col-sm-2 col-form-label-lg"
+                                                   style="padding-right: 0">{{__('status')}}</label>
+                                            <div class="col-sm-10" style="padding-left: 0">
+                                                <select class="form-select" id="status" name="status" tabindex="10" data-index="10">
+                                                    <option value="1" {{isset($user) && $user->status == 1 ? 'selected' : ''}}>{{__('enable')}}</option>
+                                                    <option value="0" {{isset($user) && $user->status == 0 ? 'selected' : ''}}>{{__('stop')}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="mb-1 col-md-12">
                                         <div class="mb-1 row">
                                             <label for="remarks" class="col-sm-1 col-form-label-lg"

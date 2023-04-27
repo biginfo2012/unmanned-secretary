@@ -138,6 +138,46 @@ function saveForm(url, refresh=true){
         });
     }
 }
+function changeForm(url, refresh=true){
+    console.log('d')
+    if($('#change_form').valid()){
+        var paramObj = new FormData($('#change_form')[0]);
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: paramObj,
+            contentType: false,
+            processData: false,
+            success: function(response){
+                console.log(response);
+                toastr.options = {
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                };
+                if(response.status == true){
+                    toastr.success("成功しました。");
+                    window.location.reload();
+                }
+                else {
+                    toastr.warning("失敗しました。");
+                }
+            },
+        });
+    }
+}
 function deleteData(id, url){
     Swal.fire({
         title: '本当に削除しますか？',
@@ -229,7 +269,7 @@ function GoBackWithRefresh(event) {
     }
 }
 
-function exportExcel(url){
+function exportFile(url, type, account){
     var paramObj = new FormData($("#search_form")[0]);
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
@@ -251,7 +291,7 @@ function exportExcel(url){
             var downloadUrl = URL.createObjectURL(blob);
             var a = document.createElement("a");
             a.href = downloadUrl;
-            a.download = "経費一覧" + today + ".xlsx";
+            a.download = "経費一覧_" + account +  "_" + today + "." + type;
             document.body.appendChild(a);
             a.click();
         }
@@ -266,4 +306,45 @@ $('#cost-img').click(function (e) {
     let src = $(this).attr('src')
     $('#imageModal').modal('show')
     $('#modal-img').attr('src', src)
+});
+$(document).on('change', '.change_status', function() {
+    let stauts = $(this).val()
+    let user_id = $(this).next().val()
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': token
+        }
+    });
+    $.ajax({
+        url: change_url,
+        type: 'post',
+        data: {
+            user_id :user_id,
+            status : stauts
+        },
+        success: function(response){
+            console.log(response);
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": false,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+            if(response.status == true){
+                toastr.success("成功しました。");
+                $('#btn_get_table').trigger('click')
+            }
+        },
+    });
 });

@@ -36,13 +36,8 @@ function getTableData(url) {
                 },
             });
         },
-        error: function () {
-
-        }
-}
-
-)
-    ;
+        error: function () {}
+    });
 }
 function getTableDataNo(url) {
     var paramObj = new FormData($('#search_form')[0]);
@@ -131,10 +126,47 @@ function saveForm(url, refresh=true){
                     else{
                         toastr.warning("失敗しました。");
                     }
-
                 }
-
-
+            },
+        });
+    }
+}
+function changeForm(url, refresh=true){
+    console.log('d')
+    if($('#change_form').valid()){
+        var paramObj = new FormData($('#change_form')[0]);
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: paramObj,
+            contentType: false,
+            processData: false,
+            success: function(response){
+                console.log(response);
+                toastr.options = {
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                };
+                if(response.status == true){
+                    toastr.success("成功しました。");
+                    window.location.reload();
+                }
+                else {
+                    toastr.warning("失敗しました。");
+                }
             },
         });
     }
@@ -230,7 +262,7 @@ function GoBackWithRefresh(event) {
     }
 }
 
-function exportExcel(url){
+function exportFile(url, type, account){
     var paramObj = new FormData($("#search_form")[0]);
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
@@ -252,7 +284,7 @@ function exportExcel(url){
             var downloadUrl = URL.createObjectURL(blob);
             var a = document.createElement("a");
             a.href = downloadUrl;
-            a.download = "経費一覧" + today + ".xlsx";
+            a.download = "経費一覧_" + account +  "_" + today + "." + type;
             document.body.appendChild(a);
             a.click();
         }

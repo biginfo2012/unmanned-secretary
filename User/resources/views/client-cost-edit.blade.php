@@ -32,7 +32,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card-body mt-1">
+                        <div class="card-body mt-0">
                             <form class="form" id="save_form">
                                 @csrf
                                 <input type="hidden" name="id" value="{{isset($data) ? $data->id : ''}}">
@@ -75,6 +75,27 @@
                                     </div>
                                     <div class="mb-0 col-md-6">
                                         <div class="mb-0 row">
+                                            <div class="mb-0 col-md-6">
+                                                <div class="mb-0 row">
+                                                    <label for="pay-date" class="col-sm-4 col-form-label-lg"
+                                                           style="padding-right: 0">{{__('pay-date')}} <span class="color-red-tmp">*</span></label>
+                                                    <div class="col-sm-8" style="padding-left: 0">
+                                                        <input type="text" class="form-control flatpickr" id="pay-date" name="pay_date" placeholder="YYYY/MM/DD" required tabindex="1" data-index="1"
+                                                               value="{{!empty($data['pay_date']) ? date('Y/m/d', strtotime($data['pay_date'])) : ""}}"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-0 col-md-6">
+                                                <div class="mb-0 row">
+                                                    <label for="shop-name" class="col-sm-4 col-form-label-lg"
+                                                           style="padding-right: 0">{{__('cost-code')}}</label>
+                                                    <div class="col-sm-8" style="padding-left: 0">
+                                                        <input type="text" class="form-control" disabled value="{{!empty($data['cost_code']) ? $data['cost_code'] : ""}}"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-0 row">
                                             <label for="shop-name" class="col-sm-2 col-form-label-lg"
                                                    style="padding-right: 0">{{__('summary')}} <span class="color-red-tmp">*</span></label>
                                             <div class="col-sm-10" style="padding-left: 0">
@@ -83,20 +104,12 @@
                                             </div>
                                         </div>
                                         <div class="mb-0 row">
-                                            <label for="pay-date" class="col-sm-2 col-form-label-lg"
-                                                   style="padding-right: 0">{{__('pay-date')}} <span class="color-red-tmp">*</span></label>
-                                            <div class="col-sm-10" style="padding-left: 0">
-                                                <input type="text" class="form-control flatpickr" id="pay-date" name="pay_date" placeholder="YYYY/MM/DD" required tabindex="2" data-index="2"
-                                                       value="{{date('Y/m/d', strtotime($data['pay_date']))}}"/>
-                                            </div>
-                                        </div>
-                                        <div class="mb-0 row">
                                             <label for="account_id" class="col-sm-2 col-form-label-lg"
                                                    style="padding-right: 0">{{__('account-item')}}</label>
                                             <div class="col-sm-10" style="padding-left: 0">
                                                 <select class="form-select" id="account_id" name="account_id" tabindex="2" data-index="2">
                                                     @foreach($accounts as $account)
-                                                        <option value="{{$account->id}}" {{!empty($data['account_id']) && $account->id == $data['account_id'] ? 'selected' : ''}}>{{$account->subject}}</option>
+                                                        <option value="{{$account->keyword_id}}" {{!empty($data['account_id']) && $account->keyword_id == $myaccount['keyword_id'] ? 'selected' : ''}}>{{$account->subject}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -147,8 +160,12 @@
                                 </div>
                                 <div class="row mt-1">
                                     <div class="col-12 text-center">
+                                        <a type="button" class="dt-button add-new btn btn-primary me-1" id="cost_export_pdf"
+                                           href="{{route('client.cost-export-pdf', $data->id)}}">
+                                            <i data-feather='download'></i>{{__('report')}}
+                                        </a>
+                                        <button type="button" class="btn btn-primary me-1 btn_submit" onclick="event.preventDefault();saveForm('{{route('client.cost-save')}}')" tabindex="8">{{__('register')}}</button>
                                         <button type="reset" class="btn btn-dark waves-effect waves-float waves-light me-1" onclick="event.preventDefault();deleteData({{$data->id}}, '{{route('client.cost-delete')}}')" tabindex="9">{{__('delete')}}</button>
-                                        <button type="button" class="btn btn-primary me-1 btn_submit" onclick="event.preventDefault();saveForm('{{route('client.cost-save')}}')" tabindex="8">{{__('edit')}}</button>
                                         <label class="btn btn-outline-secondary waves-effect " tabindex="10" id="btn_cancel">{{__('cancel')}}</label>
                                     </div>
                                 </div>

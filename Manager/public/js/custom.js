@@ -136,6 +136,46 @@ function saveForm(url){
         });
     }
 }
+function changeForm(url, refresh=true){
+    console.log('d')
+    if($('#change_form').valid()){
+        var paramObj = new FormData($('#change_form')[0]);
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: paramObj,
+            contentType: false,
+            processData: false,
+            success: function(response){
+                console.log(response);
+                toastr.options = {
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                };
+                if(response.status == true){
+                    toastr.success("成功しました。");
+                    window.location.reload();
+                }
+                else {
+                    toastr.warning("失敗しました。");
+                }
+            },
+        });
+    }
+}
 function deleteData(id, url){
     Swal.fire({
         title: '本当に削除しますか？',
@@ -226,3 +266,44 @@ function GoBackWithRefresh(event) {
         window.history.back();
     }
 }
+$(document).on('change', '.change_status', function() {
+    let stauts = $(this).val()
+    let user_id = $(this).next().val()
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': token
+        }
+    });
+    $.ajax({
+        url: change_url,
+        type: 'post',
+        data: {
+            user_id :user_id,
+            status : stauts
+        },
+        success: function(response){
+            console.log(response);
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": false,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+            if(response.status == true){
+                toastr.success("成功しました。");
+                $('#btn_get_table').trigger('click')
+            }
+        },
+    });
+});

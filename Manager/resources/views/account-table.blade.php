@@ -19,7 +19,7 @@
             <td class="p-0 border text-left align-middle px-1">{{$item['assistant']}}</td>
             <td class="p-0 border text-left align-middle px-1">{{$item['code']}}</td>
             <td class="p-0 border text-left align-middle px-1">{{$item['tax']['tax_type']}}</td>
-            <td class="p-0 border text-left align-middle px-1">{{$item['keyword']}}</td>
+            <td class="p-0 border text-left align-middle px-1">{{$item['keyword']['keyword']}}</td>
             <td class="p-0 border text-center align-middle">
                 <input type="hidden" value="{{$item['id']}}">
                 <a href="{{route('manager.account-edit', $item['id'])}}" class="btn btn-outline-dark waves-effect ex_change" style="padding: 8px; margin: 5px;">{{__('edit')}}</a>

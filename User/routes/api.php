@@ -27,4 +27,6 @@ Route::middleware('auth:api')->group(function () {
     Route::post('ocr-image-upload', [ApiController::class, 'ocrImageUpload'])->name('api.ocr-image-upload');
     Route::post('ocr-result-save', [ApiController::class, 'ocrResultSave'])->name('api.ocr-result-save');
     Route::post('get-shop-list', [ApiController::class, 'getShopList'])->name('api.get-shop-list');
+    Route::post('get-list-by-date', [ApiController::class, 'getListByDate'])->name('api.get-list-by-date');
+    Route::post('get-month', [ApiController::class, 'getMonth'])->name('api.get-month');
 });

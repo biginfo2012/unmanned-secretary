@@ -31,6 +31,7 @@ Route::group(['middleware' => 'auth'], function (){
         Route::get('company-add', [ManagerController::class, 'addCompany'])->name('manager.company-add');
         Route::get('company-edit/{id}', [ManagerController::class, 'editCompany'])->name('manager.company-edit');
         Route::post('company-save', [ManagerController::class, 'saveCompany'])->name('manager.company-save');
+        Route::post('company-change-status', [ManagerController::class, 'changeStatusCompany'])->name('manager.company-change-status');
         Route::post('company-delete', [ManagerController::class, 'deleteCompany'])->name('manager.company-delete');
         Route::post('company-table', [ManagerController::class, 'tableCompany'])->name('manager.company-table');
 
@@ -41,6 +42,8 @@ Route::group(['middleware' => 'auth'], function (){
         Route::post('account-save', [ManagerController::class, 'saveAccount'])->name('manager.account-save');
         Route::post('account-delete', [ManagerController::class, 'deleteAccount'])->name('manager.account-delete');
         Route::post('account-table', [ManagerController::class, 'tableAccount'])->name('manager.account-table');
+
+        Route::post('change-account-type', [ManagerController::class, 'changeAccountType'])->name('manager.change-account-type');
     });
 });
 require __DIR__.'/auth.php';

@@ -16,6 +16,7 @@
     "please-input-contact": "連絡先を入れてください",
     "please-input-contact-company": "連絡先を入れてください",
     "company-code": "契約者コード",
+    "user-code": "顧客コード",
     "company-name": "契約者名",
     "contact": "連絡先",
     "register-date": "登録日",
@@ -124,5 +125,13 @@
     "assi-subject": "補助科目",
     "subject-code": "科目コード",
     "tax-type": "税区分",
-    "keyword": "検索キー"
+    "keyword": "検索キー",
+    "cost-code": "レシートID",
+    "my-detail": "基本情報",
+    "account-detail-type": "会計ソフト",
+    "change": "変更",
+    "account-type": "出力形式",
+    "type-setting": "会計ソフト設定",
+    "save": "保存",
+    "please-select-soft": "会計ソフトを選択してください。"
 }

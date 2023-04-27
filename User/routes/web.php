@@ -33,6 +33,7 @@ Route::group(['middleware' => 'auth'], function (){
         Route::post('cost-save', [UserController::class, 'saveCost'])->name('client.cost-save');
         Route::post('cost-delete', [UserController::class, 'deleteCost'])->name('client.cost-delete');
         Route::post('cost-export-excel', [UserController::class, 'costExportExcel'])->name('client.cost-export-excel');
+        Route::post('cost-export-csv', [UserController::class, 'costExportCSV'])->name('client.cost-export-csv');
         Route::get('cost-export-pdf/{id}', [UserController::class, 'costExportPDF'])->name('client.cost-export-pdf');
 
         //勘定項目管理
@@ -42,6 +43,8 @@ Route::group(['middleware' => 'auth'], function (){
         Route::post('account-save', [UserController::class, 'saveAccount'])->name('client.account-save');
         Route::post('account-delete', [UserController::class, 'deleteAccount'])->name('client.account-delete');
         Route::post('account-table', [UserController::class, 'tableAccount'])->name('client.account-table');
+
+        Route::post('change-account-type', [UserController::class, 'changeAccountType'])->name('client.change-account-type');
 
         //マイページ
         Route::get('my-page', [UserController::class, 'myPage'])->name('client.my-page');

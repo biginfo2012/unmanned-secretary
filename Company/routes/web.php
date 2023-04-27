@@ -31,6 +31,7 @@ Route::group(['middleware' => 'auth'], function (){
         Route::get('client-add', [CompanyController::class, 'addClient'])->name('company.client-add');
         Route::get('client-edit/{id}', [CompanyController::class, 'editClient'])->name('company.client-edit');
         Route::post('client-save', [CompanyController::class, 'saveClient'])->name('company.client-save');
+        Route::post('client-change-status', [CompanyController::class, 'changeStatusClient'])->name('company.client-change-status');
         Route::post('client-delete', [CompanyController::class, 'deleteClient'])->name('company.client-delete');
         Route::post('client-table', [CompanyController::class, 'tableClient'])->name('company.client-table');
         //顧客別経費一覧機能
@@ -40,6 +41,7 @@ Route::group(['middleware' => 'auth'], function (){
         Route::post('client-cost-save', [CompanyController::class, 'saveClientCost'])->name('company.client-cost-save');
         Route::post('client-cost-delete', [CompanyController::class, 'deleteClientCost'])->name('company.client-cost-delete');
         Route::post('client-cost-export-excel', [CompanyController::class, 'clientCostExportExcel'])->name('company.client-cost-export-excel');
+        Route::post('cost-export-csv', [CompanyController::class, 'costExportCSV'])->name('company.cost-export-csv');
         Route::get('client-cost-export-pdf/{id}', [CompanyController::class, 'clientCostExportPDF'])->name('company.client-cost-export-pdf');
 
         //勘定項目管理
@@ -49,6 +51,8 @@ Route::group(['middleware' => 'auth'], function (){
         Route::post('account-save', [CompanyController::class, 'saveAccount'])->name('company.account-save');
         Route::post('account-delete', [CompanyController::class, 'deleteAccount'])->name('company.account-delete');
         Route::post('account-table', [CompanyController::class, 'tableAccount'])->name('company.account-table');
+
+        Route::post('change-account-type', [CompanyController::class, 'changeAccountType'])->name('company.change-account-type');
 
         //マイページ
         Route::get('my-page', [CompanyController::class, 'myPage'])->name('company.my-page');

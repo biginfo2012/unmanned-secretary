@@ -9,9 +9,12 @@ class Account extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'subject', 'assistant', 'code', 'keyword', 'status', 'type', 'user_id'
+        'subject', 'assistant', 'code', 'keyword_id', 'status', 'type', 'type_id', 'user_id'
     ];
     public function tax(){
         return $this->hasOne(TaxType::class, 'id', 'type');
+    }
+    public function keyword(){
+        return $this->hasOne(AccountKeyword::class, 'id', 'keyword_id');
     }
 }

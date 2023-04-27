@@ -17,13 +17,9 @@
                                         class="dt-action-buttons d-flex align-items-center justify-content-center justify-content-lg-end flex-lg-nowrap flex-wrap">
                                         <div class="dt-buttons">
                                             <button type="button" class="dt-button add-new btn btn-primary" id="cost_export_excel"
-                                                    onclick="event.preventDefault();exportExcel('{{route('client.cost-export-excel')}}')">
+                                                    onclick="event.preventDefault();exportFile('{{route('client.cost-export-csv')}}', 'csv', '{{trim($account_type)}}')">
                                                 <i data-feather='download'></i>{{__('export')}}
                                             </button>
-{{--                                            <a type="button" class="dt-button add-new btn btn-primary" id="cost_export_pdf"--}}
-{{--                                               href="{{route('client.client-cost-export-pdf', $user->id)}}">--}}
-{{--                                                <i data-feather='download'></i>{{__('report')}}--}}
-{{--                                            </a>--}}
                                         </div>
                                     </div>
                                 </div>

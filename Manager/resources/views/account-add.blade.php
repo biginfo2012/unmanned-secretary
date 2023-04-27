@@ -66,7 +66,7 @@
                                             <label for="keyword" class="col-sm-2 col-form-label-lg"
                                                    style="padding-right: 0">{{__('keyword')}} <span class="color-red-tmp">*</span></label>
                                             <div class="col-sm-10" style="padding-left: 0">
-                                                <input type="text" id="keyword" class="form-control" name="keyword" placeholder="" value="{{isset($account) ? $account->keyword : ''}}" required tabindex="5" data-index="5"/>
+                                                <input type="text" id="keyword" class="form-control" name="keyword" placeholder="" value="{{isset($account) ? $account->keyword->keyword : ''}}" required tabindex="5" data-index="5"/>
                                             </div>
                                         </div>
                                     </div>
@@ -74,9 +74,9 @@
                                 <div class="row">
                                     <div class="col-12 text-center">
                                         <button type="button" class="btn btn-primary me-1 btn_submit" onclick="event.preventDefault();saveForm('{{route('manager.account-save')}}')" tabindex="12">{{__('register')}}</button>
-                                        @if(isset($account))
-                                            <button type="reset" class="btn btn-dark waves-effect waves-float waves-light me-1" onclick="event.preventDefault();deleteData({{$account->id}}, '{{route('manager.account-delete')}}')" tabindex="13">{{__('delete')}}</button>
-                                        @endif
+{{--                                        @if(isset($account))--}}
+{{--                                            <button type="reset" class="btn btn-dark waves-effect waves-float waves-light me-1" onclick="event.preventDefault();deleteData({{$account->id}}, '{{route('manager.account-delete')}}')" tabindex="13">{{__('delete')}}</button>--}}
+{{--                                        @endif--}}
                                         <label class="btn btn-outline-secondary waves-effect " tabindex="14" id="btn_cancel">{{__('cancel')}}</label>
                                     </div>
                                 </div>

@@ -7,6 +7,7 @@ use App\Models\Shop;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -137,10 +138,22 @@ class ApiController extends Controller
                 $responseData->result = $data;
             }
             else{
+                $ex = true;
+                $code = 0;
+                $parent_code = Auth::user()->user_code;
+                while($ex){
+                    $code = rand(100, 999);
+                    $code = $parent_code . date('Ymd') . $code;
+                    $c_cost = Cost::where('cost_code', $code)->first();
+                    if(!isset($c_cost)) {
+                        $ex = false;
+                    }
+                }
                 $data = [
                     'user_id' => Auth::user()->id,
                     'url' => $filename,
-                    'type' => 0
+                    'type' => 0,
+                    'cost_code' => $code
                 ];
                 Cost::create($data);
             }
@@ -154,43 +167,7 @@ class ApiController extends Controller
         return response()->json($responseData);
     }
     public function ocrResultSave(Request $request){
-        $input = $request->all();
-
-//        $validator = Validator::make($input,
-//            [
-//                'url' => ['required'],
-//                'shop_name' => ['required'],
-//                'pay_date' => ['required'],
-//                'total' => ['required'],
-//                'percent' => ['required']
-//            ]);
-
         $responseData = new ApiResponseData($request);
-//        try {
-//            if ($validator->fails()) {
-//                $responseData->status = self::ERROR;
-//                $errors = $validator->errors();
-//                if ($errors->has('url')) {
-//                    $responseData->message =  self::ERR_INVALID_IMAGE;
-//                }
-//                else if ($errors->has('shop_name')) {
-//                    $responseData->message =  self::ERR_INVALID_SHOP_NAME;
-//                }
-//                else if ($errors->has('pay_date')) {
-//                    $responseData->message =  self::ERR_INVALID_PAY_DATE;
-//                }
-//                else if ($errors->has('total')) {
-//                    $responseData->message =  self::ERR_INVALID_TOTAL;
-//                }
-//                else if ($errors->has('percent')) {
-//                    $responseData->message =  self::ERR_INVALID_PERCENT;
-//                }
-//                return response()->json($responseData);
-//            }
-//        }
-//        catch (Exception $e){
-//            Log::info('$e : ' . $e->getMessage());
-//        }
         $shop_name = $request->shop_name;
         $shop_id = null;
         if(!empty($shop_name)){
@@ -213,6 +190,22 @@ class ApiController extends Controller
             $img_arr = explode('/', $img_url);
             $url = $img_arr[count($img_arr) - 1];
         }
+        $ex = true;
+        $code = 0;
+        $parent_code = Auth::user()->user_code;
+        while($ex){
+            $code = rand(100, 999);
+            $code = $parent_code . date('Ymd') . $code;
+            $c_cost = Cost::where('cost_code', $code)->first();
+            if(!isset($c_cost)) {
+                $ex = false;
+            }
+        }
+        //for second auto select account Id
+        if($shop_id != null){
+            $shop_data = Cost::with('shop')->where('user_id', Auth::user()->id)->where('shop_id', $shop_id)
+                ->select('account_id', DB::raw('count(*) as total'))->groupBy('account_id')->get();
+        }
 
         $data = [
             'user_id' => Auth::user()->id,
@@ -222,7 +215,8 @@ class ApiController extends Controller
             'percent' => $request->percent,
             'content' => $request->contents,
             'note' => $request->note,
-            'url' => $url
+            'url' => $url,
+            'cost_code' => $code
         ];
 
         Cost::create($data);
@@ -402,5 +396,74 @@ O77 Zam 2022/11/07 -
         $data -> month = $month;
         $data -> day = $day;
         return $data;
+    }
+
+    public function getListByDate(Request $request){
+        $input = $request->all();
+
+        $validator = Validator::make($input,
+            [
+                'date' => ['required'],
+            ]);
+
+        $responseData = new ApiResponseData($request);
+        try {
+            if ($validator->fails()) {
+                $responseData->status = self::ERROR;
+                $errors = $validator->errors();
+                if ($errors->has('date')) {
+                    $responseData->message =  self::ERR_INVALID_DATE;
+                }
+                return response()->json($responseData);
+            }
+        }
+        catch (Exception $e){
+            Log::info('$e : ' . $e->getMessage());
+        }
+        $date = $request->date;
+        $cost_data = Cost::with('shop', 'account')->where('pay_date', $date)->where( 'user_id', Auth::user()->id)->get()->toArray();
+        $total = Cost::where('pay_date', $date)->where( 'user_id', Auth::user()->id)->get()->sum('total');
+        $data = [
+            'cost_data' => $cost_data,
+            'total' => $total
+        ];
+        $responseData->result = $data;
+        $responseData->status = self::SUCCESS;
+        $responseData->message = "success";
+        return response()->json($responseData);
+    }
+    public function getMonth(Request $request){
+        $input = $request->all();
+
+        $validator = Validator::make($input,
+            [
+                'month' => ['required'],
+            ]);
+
+        $responseData = new ApiResponseData($request);
+        try {
+            if ($validator->fails()) {
+                $responseData->status = self::ERROR;
+                $errors = $validator->errors();
+                if ($errors->has('month')) {
+                    $responseData->message =  self::ERR_INVALID_MONTH;
+                }
+                return response()->json($responseData);
+            }
+        }
+        catch (Exception $e){
+            Log::info('$e : ' . $e->getMessage());
+        }
+        $month = $request->month;
+        $firstD = date('Y-m-01', strtotime($month));
+        $lastD = date('Y-m-t', strtotime($month));
+        $total = Cost::where('pay_date', '>=', $firstD)->where('pay_date', '<=', $lastD)->where( 'user_id', Auth::user()->id)->get()->sum('total');
+        $data = [
+            'total' => $total
+        ];
+        $responseData->result = $data;
+        $responseData->status = self::SUCCESS;
+        $responseData->message = "success";
+        return response()->json($responseData);
     }
 }
