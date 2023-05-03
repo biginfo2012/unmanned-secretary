@@ -481,6 +481,30 @@ WHERE c.user_id = " . $user_id . " AND c.pay_date = '" . $date . "' ORDER BY c.c
         $responseData->message = "success";
         return response()->json($responseData);
     }
+    public function getListTotal(Request $request){
+        $input = $request->all();
+        $responseData = new ApiResponseData($request);
+        $user_id = Auth::user()->id;
+        $type_id = Auth::user()->account_type;
+        $sql = "SELECT c.id, c.pay_date, c.content, c.total, c.percent, c.url, c.note, c.`status`, c.created_at, s.shop_name, ak.`subject`, ak.keyword_id FROM costs AS c
+LEFT JOIN shops AS s ON s.id = c.shop_id LEFT JOIN (SELECT a.`subject`, a.keyword_id FROM accounts as a WHERE a.type_id = " . $type_id . ") AS ak ON ak.keyword_id = c.account_id
+WHERE c.user_id = " . $user_id . " ORDER BY c.created_at DESC";
+        $data = DB::select($sql);
+        $cost_data = json_decode(json_encode($data, true), true);
+        $page_start = $request->page_start;
+        $page_end = $request->page_end;
+        $offset = $page_end - $page_start;
+        $cost_data = array_slice($cost_data, $page_start, $offset, false);
+        $total = Cost::where( 'user_id', Auth::user()->id)->get()->count();
+        $data = [
+            'cost_data' => $cost_data,
+            'total' => $total
+        ];
+        $responseData->result = $data;
+        $responseData->status = self::SUCCESS;
+        $responseData->message = "success";
+        return response()->json($responseData);
+    }
     public function getMonth(Request $request){
         $input = $request->all();
 

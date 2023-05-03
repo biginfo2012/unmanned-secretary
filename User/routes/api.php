@@ -29,4 +29,5 @@ Route::middleware('auth:api')->group(function () {
     Route::post('get-shop-list', [ApiController::class, 'getShopList'])->name('api.get-shop-list');
     Route::post('get-list-by-date', [ApiController::class, 'getListByDate'])->name('api.get-list-by-date');
     Route::post('get-month', [ApiController::class, 'getMonth'])->name('api.get-month');
+    Route::post('get-list-total', [ApiController::class, 'getListTotal'])->name('api.get-list-total');
 });
