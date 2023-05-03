@@ -367,7 +367,7 @@
 {{--                    @if(!empty($data[0]['url']))--}}
 {{--                        <img alt="image" src="{{asset('upload').'/'.$data[0]['url']}}" style="height: 360px">--}}
 {{--                    @endif--}}
-                   <img alt="Test Team" src="{{asset('upload').'/'.$data[0]['url']}}" style="height: 160px; transform: rotate(90deg);">
+                   <img alt="Test Team" src="{{asset('upload').'/'.$data[0]['url']}}" style="height: 350px;">
                 </td>
                 <td class="col6">
                     <table class="details-column-table">

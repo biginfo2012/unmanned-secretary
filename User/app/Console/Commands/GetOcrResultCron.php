@@ -5,7 +5,9 @@ namespace App\Console\Commands;
 use App\Models\Cost;
 use App\Models\Shop;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use stdClass;
 
@@ -66,13 +68,48 @@ class GetOcrResultCron extends Command
                         $shop_id = $shop->id;
                     }
                 }
-                $data = [
-                    'shop_id' => $shop_id,
-                    'pay_date' => $parseData->year != '' && $parseData->month != '' && $parseData->day != '' ? $parseData->year . '-' . $parseData->month . '-' . $parseData->day : null,
-                    'total' => $parseData->total,
-                    'percent' => $parseData->percent,
-                    'type' => 1
-                ];
+                if($shop_id != null){
+                    $sql = "SELECT account_id, COUNT(*) AS cnt FROM costs WHERE shop_id = " . $shop_id . " AND user_id = " . Auth::user()->id . " AND account_id IS NOT NULL GROUP BY account_id";
+                    $data = DB::select($sql);
+                    if(isset($data)){
+                        $account_id = null;
+                        $max = $this->max_attribute_in_array($data, 'cnt');
+                        $data = json_decode(json_encode($data, true), true);
+                        foreach ($data as $item){
+                            if($item['cnt'] == $max){
+                                $account_id = $item['account_id'];
+                            }
+                        }
+                        Log::info("max: " . $account_id);
+                        $data = [
+                            'shop_id' => $shop_id,
+                            'pay_date' => $parseData->year != '' && $parseData->month != '' && $parseData->day != '' ? $parseData->year . '-' . $parseData->month . '-' . $parseData->day : null,
+                            'total' => $parseData->total,
+                            'percent' => $parseData->percent,
+                            'type' => 1,
+                            'account_id' => $account_id
+                        ];
+                    }
+                    else{
+                        $data = [
+                            'shop_id' => $shop_id,
+                            'pay_date' => $parseData->year != '' && $parseData->month != '' && $parseData->day != '' ? $parseData->year . '-' . $parseData->month . '-' . $parseData->day : null,
+                            'total' => $parseData->total,
+                            'percent' => $parseData->percent,
+                            'type' => 1
+                        ];
+                    }
+                }
+                else{
+                    $data = [
+                        'shop_id' => $shop_id,
+                        'pay_date' => $parseData->year != '' && $parseData->month != '' && $parseData->day != '' ? $parseData->year . '-' . $parseData->month . '-' . $parseData->day : null,
+                        'total' => $parseData->total,
+                        'percent' => $parseData->percent,
+                        'type' => 1
+                    ];
+                }
+
                 Cost::find($cost->id)->update($data);
                 $end = new \DateTime();
                 $diff = $end->getTimestamp() - $start->getTimestamp();

@@ -203,27 +203,69 @@ class ApiController extends Controller
         }
         //for second auto select account Id
         if($shop_id != null){
-            $shop_data = Cost::with('shop')->where('user_id', Auth::user()->id)->where('shop_id', $shop_id)
-                ->select('account_id', DB::raw('count(*) as total'))->groupBy('account_id')->get();
+            $sql = "SELECT account_id, COUNT(*) AS cnt FROM costs WHERE shop_id = " . $shop_id . " AND user_id = " . Auth::user()->id . " AND account_id IS NOT NULL GROUP BY account_id";
+            $data = DB::select($sql);
+            if(isset($data)){
+                $account_id = null;
+                $max = $this->max_attribute_in_array($data, 'cnt');
+                $data = json_decode(json_encode($data, true), true);
+                foreach ($data as $item){
+                    if($item['cnt'] == $max){
+                        $account_id = $item['account_id'];
+                    }
+                }
+                Log::info("max: " . $account_id);
+                $data = [
+                    'user_id' => Auth::user()->id,
+                    'shop_id' => $shop_id,
+                    'pay_date' => $request->pay_date,
+                    'total' => $request->total,
+                    'percent' => $request->percent,
+                    'content' => $request->contents,
+                    'note' => $request->note,
+                    'url' => $url,
+                    'cost_code' => $code,
+                    'account_id' => $account_id
+                ];
+            }
+            else{
+                $data = [
+                    'user_id' => Auth::user()->id,
+                    'shop_id' => $shop_id,
+                    'pay_date' => $request->pay_date,
+                    'total' => $request->total,
+                    'percent' => $request->percent,
+                    'content' => $request->contents,
+                    'note' => $request->note,
+                    'url' => $url,
+                    'cost_code' => $code
+                ];
+            }
         }
-
-        $data = [
-            'user_id' => Auth::user()->id,
-            'shop_id' => $shop_id,
-            'pay_date' => $request->pay_date,
-            'total' => $request->total,
-            'percent' => $request->percent,
-            'content' => $request->contents,
-            'note' => $request->note,
-            'url' => $url,
-            'cost_code' => $code
-        ];
+        else{
+            $data = [
+                'user_id' => Auth::user()->id,
+                'shop_id' => $shop_id,
+                'pay_date' => $request->pay_date,
+                'total' => $request->total,
+                'percent' => $request->percent,
+                'content' => $request->contents,
+                'note' => $request->note,
+                'url' => $url,
+                'cost_code' => $code,
+            ];
+        }
 
         Cost::create($data);
         $responseData->message = "success";
         $responseData->status = self::SUCCESS;
         return response()->json($responseData);
 
+    }
+    function max_attribute_in_array($array, $prop) {
+        return max(array_map(function($o) use($prop) {
+            return $o->$prop;
+        }, $array));
     }
     public function getShopList(Request $request){
         $responseData = new ApiResponseData($request);
@@ -421,7 +463,14 @@ O77 Zam 2022/11/07 -
             Log::info('$e : ' . $e->getMessage());
         }
         $date = $request->date;
-        $cost_data = Cost::with('shop', 'account')->where('pay_date', $date)->where( 'user_id', Auth::user()->id)->get()->toArray();
+        $user_id = Auth::user()->id;
+        $type_id = Auth::user()->account_type;
+        $sql = "SELECT c.id, c.pay_date, c.content, c.total, c.percent, c.url, c.note, c.`status`, c.created_at, s.shop_name, ak.`subject`, ak.keyword_id FROM costs AS c
+LEFT JOIN shops AS s ON s.id = c.shop_id LEFT JOIN (SELECT a.`subject`, a.keyword_id FROM accounts as a WHERE a.type_id = " . $type_id . ") AS ak ON ak.keyword_id = c.account_id
+WHERE c.user_id = " . $user_id . " AND c.pay_date = '" . $date . "' ORDER BY c.created_at DESC";
+        $data = DB::select($sql);
+        $cost_data = json_decode(json_encode($data, true), true);
+        //$cost_data = Cost::with('shop')->where('pay_date', $date)->where( 'user_id', Auth::user()->id)->get()->toArray();
         $total = Cost::where('pay_date', $date)->where( 'user_id', Auth::user()->id)->get()->sum('total');
         $data = [
             'cost_data' => $cost_data,

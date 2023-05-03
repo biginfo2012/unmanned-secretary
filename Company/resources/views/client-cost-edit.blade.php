@@ -123,7 +123,7 @@
                                                    style="padding-right: 0">{{__('amount')}} <span class="color-red-tmp">*</span></label>
                                             <div class="col-sm-10" style="padding-left: 0">
                                                 <div class="input-group input-group-merge">
-                                                    <input type="number" class="form-control" id="total" name="total" placeholder="YYYY/MM/DD" tabindex="4" data-index="4"
+                                                    <input type="number" class="form-control" id="total" name="total" tabindex="4" data-index="4"
                                                            value="{{$data['total']}}"/>
                                                     <span class="input-group-text">円</span>
                                                 </div>
