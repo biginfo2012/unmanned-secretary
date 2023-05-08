@@ -62,7 +62,7 @@
 </div>
 <!-- END: Content-->
 <footer class="footer footer-static footer-light" style="background: white">
-    <p class="clearfix mb-0 d-flex"><span class="float-md-start d-block d-md-inline-block mt-25" style="margin: auto">Copyright &copy; 2022 Manager, All rights Reserved</span></p>
+    <p class="clearfix mb-0 d-flex"><span class="float-md-start d-block d-md-inline-block mt-25" style="margin: auto">Copyright © 2023 HubSystem.Inc, All rights Reserved</span></p>
 </footer>
 <!-- BEGIN: Vendor JS-->
 

@@ -531,8 +531,52 @@ WHERE c.user_id = " . $user_id . " ORDER BY c.created_at DESC";
         $firstD = date('Y-m-01', strtotime($month));
         $lastD = date('Y-m-t', strtotime($month));
         $total = Cost::where('pay_date', '>=', $firstD)->where('pay_date', '<=', $lastD)->where( 'user_id', Auth::user()->id)->get()->sum('total');
+        $sql = "SELECT COUNT(id) AS total, SUM(CASE WHEN `status` = 1 THEN 1 ELSE 0 END) AS check_cnt, SUM(CASE WHEN `status` = 0 THEN 1 ELSE 0 END) AS uncheck_cnt, pay_date FROM costs
+WHERE pay_date >= '" . $firstD . "' AND pay_date <= '" . $lastD . "'
+GROUP BY pay_date ORDER BY pay_date";
+        $month_data = DB::select($sql);
+        $month_data = json_decode(json_encode($month_data, true), true);
         $data = [
-            'total' => $total
+            'total' => $total,
+            'data' => $month_data
+        ];
+        $responseData->result = $data;
+        $responseData->status = self::SUCCESS;
+        $responseData->message = "success";
+        return response()->json($responseData);
+    }
+    public function getMonthStatus(Request $request){
+        $input = $request->all();
+
+        $validator = Validator::make($input,
+            [
+                'month' => ['required'],
+            ]);
+
+        $responseData = new ApiResponseData($request);
+        try {
+            if ($validator->fails()) {
+                $responseData->status = self::ERROR;
+                $errors = $validator->errors();
+                if ($errors->has('month')) {
+                    $responseData->message =  self::ERR_INVALID_MONTH;
+                }
+                return response()->json($responseData);
+            }
+        }
+        catch (Exception $e){
+            Log::info('$e : ' . $e->getMessage());
+        }
+        $month = $request->month;
+        $firstD = date('Y-m-01', strtotime($month));
+        $lastD = date('Y-m-t', strtotime($month));
+        $sql = "SELECT COUNT(id) AS total, SUM(CASE WHEN `status` = 1 THEN 1 ELSE 0 END) AS check_cnt, SUM(CASE WHEN `status` = 0 THEN 1 ELSE 0 END) AS uncheck_cnt, pay_date FROM costs
+WHERE pay_date >= '" . $firstD . "' AND pay_date <= '" . $lastD . "'
+GROUP BY pay_date ORDER BY pay_date";
+        $month_data = DB::select($sql);
+        $month_data = json_decode(json_encode($month_data, true), true);
+        $data = [
+            'data' => $month_data
         ];
         $responseData->result = $data;
         $responseData->status = self::SUCCESS;
