@@ -76,6 +76,12 @@
     <script>
         addEventListener('pageshow', (event) => {
             getTableData('{{route('client.cost-table')}}');
+
         });
+        $(document).ready(function () {
+            const interval = setInterval(function() {
+                getTableData('{{route('client.cost-table')}}')
+            }, 60000)
+        })
     </script>
 </x-app-layout>

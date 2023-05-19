@@ -44,8 +44,8 @@ class GetOcrResultCron extends Command
     public function handle()
     {
         Log::info("OCR Scheduler Start:");
-        $costs = Cost::where('type', 0)->whereNotNull('url')->take(20)->get();
-        $costs_id = Cost::where('type', 0)->whereNotNull('url')->take(20)->pluck('id');
+        $costs = Cost::where('type', '!=', 1)->whereNotNull('url')->take(20)->get();
+        $costs_id = Cost::where('type', '!=', 1)->whereNotNull('url')->take(20)->pluck('id');
         if(count($costs_id)){
             Cost::whereIn('id', $costs_id)->update(['type' => 2]);
             foreach ($costs as $cost){
@@ -69,9 +69,9 @@ class GetOcrResultCron extends Command
                     }
                 }
                 if($shop_id != null){
-                    $sql = "SELECT account_id, COUNT(*) AS cnt FROM costs WHERE shop_id = " . $shop_id . " AND user_id = " . Auth::user()->id . " AND account_id IS NOT NULL GROUP BY account_id";
+                    $sql = "SELECT account_id, COUNT(*) AS cnt FROM costs WHERE shop_id = " . $shop_id . " AND user_id = " . $cost->user_id . " AND account_id IS NOT NULL GROUP BY account_id";
                     $data = DB::select($sql);
-                    if(isset($data)){
+                    if(!empty($data)){
                         $account_id = null;
                         $max = $this->max_attribute_in_array($data, 'cnt');
                         $data = json_decode(json_encode($data, true), true);
@@ -124,7 +124,7 @@ class GetOcrResultCron extends Command
     {
         $command = 'tesseract --tessdata-dir /home/ubuntu/tessdata_best ' . $path . ' - -l script/Japanese --psm 6';
         $content = shell_exec($command);
-        Log::info("OCR Scheduler Content: " . $content);
+        //Log::info("OCR Scheduler Content: " . $content);
         $name = ''; $total = ''; $percent = ''; $year = ''; $month = ''; $day = '';
         $line = strtok($content, PHP_EOL);
         $isContainNumber = false;
@@ -223,5 +223,10 @@ class GetOcrResultCron extends Command
         $data->month = $month;
         $data->day = $day;
         return $data;
+    }
+    function max_attribute_in_array($array, $prop) {
+        return max(array_map(function($o) use($prop) {
+            return $o->$prop;
+        }, $array));
     }
 }

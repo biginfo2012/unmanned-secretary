@@ -90,6 +90,24 @@ class ApiController extends Controller
         $responseData->status = self::SUCCESS;
         return response()->json($responseData);
     }
+
+    public function passwordChange(Request $request){
+        $responseData = new ApiResponseData($request);
+        if (!Hash::check($request->current_password, Auth::user()->password)) {
+            // no they don't
+            $responseData->status = self::ERROR;
+            $responseData->message = self::ERR_INVALID_PASSWORD;
+            return response()->json($responseData);
+        }
+        $id = Auth::user()->id;
+        $data = [
+            'password' => Hash::make($request->password)
+        ];
+        User::find($id)->update($data);
+        $responseData->message = "success";
+        $responseData->status = self::SUCCESS;
+        return response()->json($responseData);
+    }
     public function ocrImageUpload(Request $request){
         $input = $request->all();
 
@@ -483,12 +501,34 @@ WHERE c.user_id = " . $user_id . " AND c.pay_date = '" . $date . "' ORDER BY c.c
     }
     public function getListTotal(Request $request){
         $input = $request->all();
+        $validator = Validator::make($input,
+            [
+                'month' => ['required'],
+            ]);
+
+        $responseData = new ApiResponseData($request);
+        try {
+            if ($validator->fails()) {
+                $responseData->status = self::ERROR;
+                $errors = $validator->errors();
+                if ($errors->has('month')) {
+                    $responseData->message =  self::ERR_INVALID_MONTH;
+                }
+                return response()->json($responseData);
+            }
+        }
+        catch (Exception $e){
+            Log::info('$e : ' . $e->getMessage());
+        }
         $responseData = new ApiResponseData($request);
         $user_id = Auth::user()->id;
         $type_id = Auth::user()->account_type;
+        $month = $request->month;
+        $firstD = date('Y-m-01', strtotime($month));
+        $lastD = date('Y-m-t', strtotime($month));
         $sql = "SELECT c.id, c.pay_date, c.content, c.total, c.percent, c.url, c.note, c.`status`, c.created_at, s.shop_name, ak.`subject`, ak.keyword_id FROM costs AS c
 LEFT JOIN shops AS s ON s.id = c.shop_id LEFT JOIN (SELECT a.`subject`, a.keyword_id FROM accounts as a WHERE a.type_id = " . $type_id . ") AS ak ON ak.keyword_id = c.account_id
-WHERE c.user_id = " . $user_id . " ORDER BY c.created_at DESC";
+WHERE c.pay_date >= '" . $firstD . "' AND c.pay_date <= '" . $lastD . "' AND c.user_id = " . $user_id . " ORDER BY c.pay_date DESC";
         $data = DB::select($sql);
         $cost_data = json_decode(json_encode($data, true), true);
         $page_start = $request->page_start;
@@ -496,6 +536,48 @@ WHERE c.user_id = " . $user_id . " ORDER BY c.created_at DESC";
         $offset = $page_end - $page_start;
         $cost_data = array_slice($cost_data, $page_start, $offset, false);
         $total = Cost::where( 'user_id', Auth::user()->id)->get()->count();
+        $data = [
+            'cost_data' => $cost_data,
+            'total' => $total
+        ];
+        $responseData->result = $data;
+        $responseData->status = self::SUCCESS;
+        $responseData->message = "success";
+        return response()->json($responseData);
+    }
+    public function getReportTotal(Request $request){
+        $input = $request->all();
+        $validator = Validator::make($input,
+            [
+                'start_date' => ['required'],
+                'end_date' => ['required'],
+            ]);
+
+        $responseData = new ApiResponseData($request);
+        try {
+            if ($validator->fails()) {
+                $responseData->status = self::ERROR;
+                $errors = $validator->errors();
+                if ($errors->has('month')) {
+                    $responseData->message =  self::ERR_INVALID_MONTH;
+                }
+                return response()->json($responseData);
+            }
+        }
+        catch (Exception $e){
+            Log::info('$e : ' . $e->getMessage());
+        }
+        $responseData = new ApiResponseData($request);
+        $user_id = Auth::user()->id;
+        $type_id = Auth::user()->account_type;
+        $start_date = $request->start_date;
+        $end_date = $request->end_date;
+        $sql = "SELECT SUM(c.total) AS subject_total, ak.`subject`, ak.keyword_id FROM costs AS c
+LEFT JOIN shops AS s ON s.id = c.shop_id LEFT JOIN (SELECT a.`subject`, a.keyword_id FROM accounts as a WHERE a.type_id = " . $type_id . ") AS ak ON ak.keyword_id = c.account_id
+WHERE c.pay_date >= '" . $start_date . "' AND c.pay_date <= '" . $end_date . "' AND c.user_id = " . $user_id . " GROUP BY ak.keyword_id";
+        $data = DB::select($sql);
+        $cost_data = json_decode(json_encode($data, true), true);
+        $total = Cost::where('pay_date', '>=', $start_date)->where('pay_date', '<=', $end_date)->where( 'user_id', Auth::user()->id)->get()->sum('total');
         $data = [
             'cost_data' => $cost_data,
             'total' => $total
@@ -531,7 +613,9 @@ WHERE c.user_id = " . $user_id . " ORDER BY c.created_at DESC";
         $firstD = date('Y-m-01', strtotime($month));
         $lastD = date('Y-m-t', strtotime($month));
         $total = Cost::where('pay_date', '>=', $firstD)->where('pay_date', '<=', $lastD)->where( 'user_id', Auth::user()->id)->get()->sum('total');
-        $sql = "SELECT COUNT(id) AS total, SUM(CASE WHEN `status` = 1 THEN 1 ELSE 0 END) AS check_cnt, SUM(CASE WHEN `status` = 0 THEN 1 ELSE 0 END) AS uncheck_cnt, pay_date FROM costs
+        $sql = "SELECT COUNT(id) AS total, SUM(CASE WHEN `status` = 1 THEN 1 ELSE 0 END) AS check_cnt, SUM(CASE WHEN `status` = 0 THEN 1 ELSE 0 END) AS uncheck_cnt,
+SUM(CASE WHEN `url` is null or pay_date is null or shop_id is null or account_id is null or total is null or percent is null THEN 1 ELSE 0 END) AS alert_cnt,
+pay_date FROM costs
 WHERE pay_date >= '" . $firstD . "' AND pay_date <= '" . $lastD . "'
 GROUP BY pay_date ORDER BY pay_date";
         $month_data = DB::select($sql);
@@ -583,4 +667,6 @@ GROUP BY pay_date ORDER BY pay_date";
         $responseData->message = "success";
         return response()->json($responseData);
     }
+
+
 }

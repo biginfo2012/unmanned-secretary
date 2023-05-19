@@ -174,8 +174,8 @@ WHERE a.type_id = " . $type_id . ") AS ak ON ak.keyword_id = c.account_id WHERE 
                     $row[] = "*";
                     $row[] = $index + 1;
                     $row[]  = !empty($task['pay_date']) ? date('Y/m/d', strtotime($task['pay_date'])) : "";
-                    $row[]  = $task['code'];
-                    $row[]  = $task['subject'];
+                    $row[]  = mb_convert_encoding($task['code'], "SJIS-win", "UTF-8");
+                    $row[]  = mb_convert_encoding($task['subject'], "SJIS-win", "UTF-8");
                     $row[]  = 0;
                     $row[]  = "";
                     $row[]  = 0;
@@ -187,7 +187,7 @@ WHERE a.type_id = " . $type_id . ") AS ak ON ak.keyword_id = c.account_id WHERE 
                     $row[] = $task['total'];
                     $row[]  = "";
                     $row[]  = 100;
-                    $row[]  = "現金";
+                    $row[]  = mb_convert_encoding("現金", "SJIS-win", "UTF-8");
                     $row[]  = 0;
                     $row[]  = "";
                     $row[]  = 0;
@@ -198,7 +198,7 @@ WHERE a.type_id = " . $type_id . ") AS ak ON ak.keyword_id = c.account_id WHERE 
                     $row[]  = "0%";
                     $row[] = $task['total'];
                     $row[]  = "";
-                    $row[]  = $task['shop_name'];
+                    $row[]  = mb_convert_encoding($task['shop_name'], "SJIS-win", "UTF-8");
                     $row[]  = "";
                     $row[]  = "";
                     $row[]  = 0;
@@ -211,19 +211,19 @@ WHERE a.type_id = " . $type_id . ") AS ak ON ak.keyword_id = c.account_id WHERE 
                     $row[] = $index + 1;
                     $row[]  = "";
                     $row[]  = !empty($task['pay_date']) ? date('Y/m/d', strtotime($task['pay_date'])) : "";
-                    $row[]  = $task['subject'];
+                    $row[]  = mb_convert_encoding($task['subject'], "SJIS-win", "UTF-8");
                     $row[]  = "";
                     $row[]  = "";
-                    $row[]  = $task['tax_type'];
+                    $row[]  = mb_convert_encoding($task['tax_type'], "SJIS-win", "UTF-8");
                     $row[] = $task['total'];
                     $row[] = !empty($task['percent']) ? (int)($task['total'] * $task['percent'] / 100) : "";
-                    $row[]  = "現金";
+                    $row[]  = mb_convert_encoding("現金", "SJIS-win", "UTF-8");
                     $row[]  = "";
                     $row[]  = "";
-                    $row[]  = "対象外";
+                    $row[]  = mb_convert_encoding("対象外", "SJIS-win", "UTF-8");
                     $row[] = $task['total'];
                     $row[]  = 0;
-                    $row[]  = $task['shop_name'];
+                    $row[]  = mb_convert_encoding($task['shop_name'], "SJIS-win", "UTF-8");
                     $row[]  = "";
                     $row[]  = "";
                     $row[]  = 3;
@@ -235,11 +235,11 @@ WHERE a.type_id = " . $type_id . ") AS ak ON ak.keyword_id = c.account_id WHERE 
                 }
                 else{
                     $row[]  = !empty($task['pay_date']) ? date('Y/m/d', strtotime($task['pay_date'])) : "";
-                    $row[]  = $task['shop_name'];
-                    $row[]  = $task['subject'];
+                    $row[]  = mb_convert_encoding($task['shop_name'], "SJIS-win", "UTF-8");
+                    $row[]  = mb_convert_encoding($task['subject'], "SJIS-win", "UTF-8");
                     $row[]  = !empty($task['percent']) ? $task['percent'] . "%" : "";
                     $row[] = $task['total'];
-                    $row[] = $task['note'];
+                    $row[] = mb_convert_encoding($task['note'], "SJIS-win", "UTF-8");
                 }
 
                 fputcsv($file, $row);
