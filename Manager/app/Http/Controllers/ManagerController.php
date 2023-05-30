@@ -9,6 +9,7 @@ use App\Models\TaxType;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class ManagerController extends Controller
@@ -61,8 +62,10 @@ class ManagerController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'post_code' => $request->post_code,
-                'address' => $request->address,
-                'contact' => $request->contact,
+                'prefecture' => $request->prefecture,
+                'city' => $request->city,
+                'town' => $request->town,
+                'after' => $request->after,
                 'charge' => $request->charge,
                 'status' => $request->status,
                 'remarks' => $request->remarks,
@@ -80,8 +83,10 @@ class ManagerController extends Controller
                     'email' => $request->email,
                     'password' => Hash::make($request->password),
                     'post_code' => $request->post_code,
-                    'address' => $request->address,
-                    'contact' => $request->contact,
+                    'prefecture' => $request->prefecture,
+                    'city' => $request->city,
+                    'town' => $request->town,
+                    'after' => $request->after,
                     'charge' => $request->charge,
                     'status' => $request->status,
                     'remarks' => $request->remarks,
@@ -95,8 +100,10 @@ class ManagerController extends Controller
                     'name' => $request->name,
                     'email' => $request->email,
                     'post_code' => $request->post_code,
-                    'address' => $request->address,
-                    'contact' => $request->contact,
+                    'prefecture' => $request->prefecture,
+                    'city' => $request->city,
+                    'town' => $request->town,
+                    'after' => $request->after,
                     'charge' => $request->charge,
                     'status' => $request->status,
                     'remarks' => $request->remarks,
@@ -114,6 +121,52 @@ class ManagerController extends Controller
         //User::where('parent_id', $id)->delete();
         User::where('id', $id)->delete();
         return response()->json(['status' => true]);
+    }
+    public function companyExportCSV(Request $request)
+    {
+        $status = $request->status;
+        $contact = $request->contact;
+        if (isset($status)){
+            $data = User::where('role', 'company')->where('status', $status)->where('contact', 'like', '%' . $contact . '%')->orderBy('created_at', 'desc')->get();
+        }
+        else{
+            $data = User::where('role', 'company')->where('contact', 'like', '%' . $contact . '%')->orderBy('created_at', 'desc')->get();
+        }
+
+        $fileName = '契約者一覧.csv';
+
+        $headers = array(
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        );
+
+        $callback = function() use($data) {
+            $file = fopen('php://output', 'w');
+            $columns = ['NO', mb_convert_encoding(__('company-code'), "SJIS-win", "UTF-8"), mb_convert_encoding(__('company-name'), "SJIS-win", "UTF-8"),
+                mb_convert_encoding(__('plan') . "名", "SJIS-win", "UTF-8"), mb_convert_encoding(__('user-id'), "SJIS-win", "UTF-8"),
+                mb_convert_encoding(__('contact'), "SJIS-win", "UTF-8"), mb_convert_encoding(__('register-date'), "SJIS-win", "UTF-8")];
+            fputcsv($file, $columns);
+
+            foreach ($data as $index => $item) {
+                $row[]  = $index+1;
+                $row[]  = $item['user_code'];
+                $row[]  = mb_convert_encoding($item['name'], "SJIS-win", "UTF-8");
+                $row[]  = "";
+                $row[] = $item['email'];
+                $row[] = $item['contact'];
+                $row[] = date('Y/m/d', strtotime($item['created_at']));
+
+                fputcsv($file, $row);
+                $row = [];
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 
     public function manageAccount(){

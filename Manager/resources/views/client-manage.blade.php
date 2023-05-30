@@ -10,13 +10,13 @@
                             <div
                                 class="d-flex justify-content-between align-items-center header-actions mx-2 row mt-75">
                                 <div class="col-sm-12 col-lg-4 d-flex justify-content-center justify-content-lg-start">
-                                    <h4 class="card-title mb-0">{{__('company-manage')}}</h4>
+                                    <h4 class="card-title mb-0">{{__('client-manage')}}</h4>
                                 </div>
                                 <div class="col-sm-12 col-lg-8 ps-xl-75 ps-0">
                                     <div
                                         class="dt-action-buttons d-flex align-items-center justify-content-center justify-content-lg-end flex-lg-nowrap flex-wrap">
                                         <div class="dt-buttons">
-                                            <a class="dt-button add-new btn btn-dark" href="{{route('manager.company-add')}}">
+                                            <a class="dt-button add-new btn btn-primary d-none" href="{{route('manager.client-add')}}">
                                                 <span>{{__('new-add')}}</span></a>
                                         </div>
                                     </div>
@@ -29,24 +29,14 @@
                                 <div class="row g-1 mb-md-0">
                                     <div class="col-md-2">
                                         <div class="mb-1 row">
-                                            <label for="status" class="col-sm-4 col-form-label-lg color-red-tmp"
-                                                   style="padding-right: 0; padding-top: 10px">{{__('plan')}}</label>
+                                            <label for="type" class="col-sm-4 col-form-label-lg"
+                                                   style="padding-right: 0; padding-top: 10px">{{__('type')}}</label>
                                             <div class="col-sm-8" style="padding-left: 0">
-                                                <select class="form-select color-red-tmp" id="status" name="status" disabled>
+                                                <select class="form-select" id="type" name="type">
                                                     <option value="">{{__('all')}}</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="mb-1 row">
-                                            <label for="status" class="col-sm-3 col-form-label-lg"
-                                                   style="padding-right: 0; padding-top: 10px">{{__('status')}}</label>
-                                            <div class="col-sm-9" style="padding-left: 0">
-                                                <select class="form-select" id="status" name="status">
-                                                    <option value="">{{__('all')}}</option>
-                                                    <option value="1">{{__('enable')}}</option>
-                                                    <option value="0">{{__('stop')}}</option>
+                                                    <option value="1">{{__('co-op')}}</option>
+                                                    <option value="2">{{__('solo-pro')}}</option>
+                                                    <option value="3">{{__('alone')}}</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -62,19 +52,8 @@
 
                                     <div class="col-md-2">
                                         <button class="btn btn-dark mr-2" id="btn_get_table"
-                                                onclick="event.preventDefault();getTableData('{{route('manager.company-table')}}')">{{__('search')}}
+                                                onclick="event.preventDefault();getTableData('{{route('manager.client-table')}}')">{{__('search')}}
                                         </button>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div
-                                            class="dt-action-buttons d-flex align-items-center justify-content-center justify-content-lg-end flex-lg-nowrap flex-wrap">
-                                            <div class="dt-buttons">
-                                                <button type="button" class="dt-button add-new btn btn-dark" id="cost_export_excel"
-                                                        onclick="event.preventDefault();exportFile('{{route('manager.company-export-csv')}}', 'csv')">
-                                                    <i data-feather='download'></i>{{__('export')}}
-                                                </button>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </form>
@@ -90,8 +69,8 @@
     <!--end::Content-->
     <script>
         addEventListener('pageshow', (event) => {
-            getTableData('{{route('manager.company-table')}}');
+            getTableData('{{route('manager.client-table')}}');
         });
-        let change_url = '{{route('manager.company-change-status')}}'
+        let change_url = '{{route('manager.client-change-status')}}'
     </script>
 </x-app-layout>

@@ -614,15 +614,23 @@ WHERE c.pay_date >= '" . $start_date . "' AND c.pay_date <= '" . $end_date . "' 
         $lastD = date('Y-m-t', strtotime($month));
         $total = Cost::where('pay_date', '>=', $firstD)->where('pay_date', '<=', $lastD)->where( 'user_id', Auth::user()->id)->get()->sum('total');
         $sql = "SELECT COUNT(id) AS total, SUM(CASE WHEN `status` = 1 THEN 1 ELSE 0 END) AS check_cnt, SUM(CASE WHEN `status` = 0 THEN 1 ELSE 0 END) AS uncheck_cnt,
-SUM(CASE WHEN `url` is null or pay_date is null or shop_id is null or account_id is null or total is null or percent is null THEN 1 ELSE 0 END) AS alert_cnt,
+SUM(CASE WHEN `url` is null or pay_date is null or shop_id is null or account_id is null or total is null or percent is null or account_id = 1 THEN 1 ELSE 0 END) AS alert_cnt,
+SUM(CASE WHEN pay_date is null THEN 1 ELSE 0 END) AS warning_count,
 pay_date FROM costs
 WHERE pay_date >= '" . $firstD . "' AND pay_date <= '" . $lastD . "'
 GROUP BY pay_date ORDER BY pay_date";
         $month_data = DB::select($sql);
         $month_data = json_decode(json_encode($month_data, true), true);
+        $sql2 = "SELECT COUNT(id) AS warning_count, SUM(CASE WHEN account_id = 1 THEN 1 ELSE 0 END) AS alert_cnt, SUM(CASE WHEN `status` = 0 THEN 1 ELSE 0 END) AS uncheck_cnt, DATE(created_at) AS create_date
+FROM costs
+WHERE created_at >= '" . $firstD . " 00:00:00" . "' AND created_at <= '" . $lastD . " 23:59:59" . "' AND pay_date is null
+GROUP BY create_date ORDER BY create_date";
+        $warning_data = DB::select($sql2);
+        $warning_data = json_decode(json_encode($warning_data, true), true);
         $data = [
             'total' => $total,
-            'data' => $month_data
+            'data' => $month_data,
+            'warning_data' => $warning_data
         ];
         $responseData->result = $data;
         $responseData->status = self::SUCCESS;

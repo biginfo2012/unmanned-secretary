@@ -24,7 +24,7 @@
                                             <label for="account-subject" class="col-sm-2 col-form-label-lg"
                                                    style="padding-right: 0">{{__('account-subject')}} <span class="color-red-tmp">*</span></label>
                                             <div class="col-sm-10" style="padding-left: 0">
-                                                <input type="text" id="account-subject" class="form-control" name="subject" placeholder="" value="{{isset($account) ? $account->subject : ''}}" required tabindex="1" data-index="1"/>
+                                                <input type="text" id="account-subject" class="form-control" name="subject" placeholder="" value="{{isset($account) ? $account->subject : ''}}" required tabindex="1"/>
                                             </div>
                                         </div>
                                     </div>
@@ -33,7 +33,7 @@
                                             <label for="type" class="col-sm-2 col-form-label-lg"
                                                    style="padding-right: 0; padding-top: 10px">{{__('type')}}</label>
                                             <div class="col-sm-10" style="padding-left: 0">
-                                                <select class="form-select" id="type" name="type" tabindex="2" data-index="2">
+                                                <select class="form-select" id="type" name="type" tabindex="2">
                                                     @foreach($types as $type)
                                                         <option value="{{$type->id}}" {{isset($account) && $account->type == $type->id ? 'selected' : ''}}>{{$type->tax_type}}</option>
                                                     @endforeach

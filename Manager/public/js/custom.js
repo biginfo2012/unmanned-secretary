@@ -307,3 +307,50 @@ $(document).on('change', '.change_status', function() {
         },
     });
 });
+
+function exportFile(url, type){
+    var paramObj = new FormData($("#search_form")[0]);
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    today =yyyy+mm+dd;
+    $.ajax({
+        url: url,
+        type: 'post',
+        data: paramObj,
+        contentType: false,
+        processData: false,
+        xhrFields:{
+            responseType: 'blob'
+        },
+        success: function (result) {
+            var blob = result;
+            var downloadUrl = URL.createObjectURL(blob);
+            var a = document.createElement("a");
+            a.href = downloadUrl;
+            a.download = "契約者一覧_" + "_" + today + "." + type;
+            document.body.appendChild(a);
+            a.click();
+        }
+    });
+}
+
+$('#post_code_zip').on('input', function (){
+    zipCloudAddress($(this).val());
+})
+$('.btn_search_address').click(function (){
+    zipCloudAddress($('#post_code_zip').val())
+})
+function zipCloudAddress(value) {
+    fetch(`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${value}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            $('#prefecture').val(data.results[0].address1);
+            $('#city').val(data.results[0].address2);
+            $('#town').val(data.results[0].address3);
+        })
+        .catch(error => console.log(error))
+}
