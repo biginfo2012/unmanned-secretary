@@ -31,7 +31,7 @@
             <td class="p-0 border text-end align-middle px-1">{{date('Y/m/d', strtotime($item['created_at']))}}</td>
             <td class="p-0 border text-center align-middle">
                 <input type="hidden" value="{{$item['id']}}">
-                <a href="{{route('company.client-cost-edit', $item['id'])}}" class="btn background-blue color-white waves-effect ex_change" style="padding: 8px; margin: 5px;">{{__('detail')}}</a>
+                <a href="{{route('company.client-cost-edit', $item['id'])}}" class="btn btn-warning color-white waves-effect ex_change" style="padding: 8px; margin: 5px;">{{__('detail')}}</a>
             </td>
         </tr>
     @endforeach

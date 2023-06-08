@@ -9,7 +9,9 @@ NOTE:
 ------
 PLACE HERE YOUR OWN SCSS CODES AND IF NEEDED, OVERRIDE THE STYLES FROM THE OTHER STYLESHEETS.
 WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BETTER LIKE THIS.  */
-
+body {
+    font-family: sans-serif !important;
+}
 body, tr, .form-control, .form-select{
     color: black;
     /*font-size: 15px;*/
@@ -51,9 +53,18 @@ div.dataTables_wrapper .dataTables_info{
     border-radius: 0 !important;
 }
 .main-menu.menu-light .navigation > li.active > a{
-    background: #233b6c !important;
-    box-shadow: 0 0 10px 1px #233b6c !important;
+    background: #8d0000 !important;
+    box-shadow: 0 0 10px 1px #8d0000 !important;
     color: #fff;
+}
+.main-menu.menu-light .navigation > li.open:not(.menu-item-closing) > a, .main-menu.menu-light .navigation > li.sidebar-group-active > a {
+    color: #fff !important;
+    background: #8d0000 !important;
+}
+.main-menu.menu-light .navigation > li ul .active {
+    background: #8d0000 !important;
+    box-shadow: 0 0 10px 1px #8d0000;
+    border-radius: 4px;
 }
 .vertical-layout.vertical-menu-modern.menu-collapsed .main-menu:not(.expanded) .navigation li.active a{
     color: #fff;
@@ -65,11 +76,19 @@ div.dataTables_wrapper .dataTables_info{
     background: #212529 !important;
 }
 html .content.app-content{
-    padding: calc(0.5rem + 4.45rem + 1rem) 0.5rem 0 !important;
+    padding: 4.45rem 0 0 0 !important;
 }
 .container, .container-sm, .container-md, .container-lg, .container-xl, .container-xxl{
     max-width: 100% !important;
 }
 .table tbody td {
     font-size: 0.9rem;
+}
+.pat-5{
+    padding-top: 5px;
+}
+.pat-7{
+    padding-top: 7px;
+    margin-left: 10px;
+    margin-right: 5px;
 }

@@ -16,7 +16,7 @@
                                     <div
                                         class="dt-action-buttons d-flex align-items-center justify-content-center justify-content-lg-end flex-lg-nowrap flex-wrap">
                                         <div class="dt-buttons">
-                                            <button type="button" class="dt-button add-new btn btn-dark" id="cost_export_excel"
+                                            <button type="button" class="dt-button add-new btn btn-warning" id="cost_export_excel"
                                                     onclick="event.preventDefault();exportFile('{{route('company.cost-export-csv')}}', 'csv', '{{trim($account_type)}}')">
                                                 <i data-feather='download'></i>{{__('export')}}
                                             </button>

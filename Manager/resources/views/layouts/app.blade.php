@@ -7,9 +7,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0,minimal-ui">
-    <title>{{ config('app.name', 'Laravel') }}</title>
-{{--    <link rel="apple-touch-icon" href="{{ asset('theme/images/ico/apple-icon-120.png') }}') }}">--}}
-{{--    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('theme/images/ico/favicon.ico') }}">--}}
+    <title>最強無人秘書</title>
+    <link rel="apple-touch-icon" href="{{ asset('icon/logo.png') }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('icon/logo.png') }}">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600"
           rel="stylesheet">
 
@@ -80,7 +80,7 @@
 <!-- END: Main Menu-->
 
 <!-- BEGIN: Content-->
-<div class="app-content content kanban-application">
+<div class="app-content content kanban-application" style="overflow-x: hidden !important;">
     <div class="content-overlay"></div>
     <div class="header-navbar-shadow"></div>
     <div class="content-wrapper container-xxl p-0">

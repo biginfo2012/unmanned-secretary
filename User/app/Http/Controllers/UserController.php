@@ -539,12 +539,13 @@ WHERE a.type_id = " . $type_id . ") AS ak ON ak.keyword_id = c.account_id WHERE 
 
         $user_id = Auth::user()->id;
         $type_id = Auth::user()->account_type;
+        $user_code = Auth::user()->user_code;
         $sql = "SELECT c.id, c.pay_date, c.content, c.total, c.percent, c.url, c.note, c.`status`, c.created_at, c.export, s.shop_name, ak.`subject`, ak.keyword_id FROM costs AS c
 LEFT JOIN shops AS s ON s.id = c.shop_id LEFT JOIN (SELECT a.`subject`, a.keyword_id FROM accounts as a WHERE a.type_id = " . $type_id . ") AS ak ON ak.keyword_id = c.account_id
-WHERE c.user_id = " . $user_id . " AND c.export != 1 AND c.url IS NOT NULL AND c.pay_date IS NOT NULL AND s.shop_name IS NOT NULL AND ak.subject IS NOT NULL AND c.total IS NOT NULL AND c.percent IS NOT NULL ORDER BY c.created_at DESC";
+WHERE c.user_id = " . $user_id . " AND c.export != 1 AND c.url IS NOT NULL AND c.pay_date IS NOT NULL AND s.shop_name IS NOT NULL AND ak.subject IS NOT NULL AND c.total IS NOT NULL AND c.percent IS NOT NULL ORDER BY c.pay_date DESC";
         $data = DB::select($sql);
         $data = json_decode(json_encode($data, true), true);
-        return view('software-add', compact('account_types', 'account_type', 'data'));
+        return view('software-add', compact('account_types', 'account_type', 'data', 'user_code'));
     }
     public function costExportCSVSoftware(Request $request){
         $account_type_id = Auth::user()->account_type;
@@ -556,7 +557,7 @@ WHERE c.user_id = " . $user_id . " AND c.export != 1 AND c.url IS NOT NULL AND c
             $sql = "SELECT c.id, c.pay_date, c.content, c.total, c.percent, c.url, c.note, c.`status`, c.created_at, c.export, s.shop_name, ak.`subject`, ak.keyword_id FROM costs AS c
 LEFT JOIN shops AS s ON s.id = c.shop_id LEFT JOIN (SELECT a.`subject`, a.keyword_id FROM accounts as a WHERE a.type_id = " . $type_id . ") AS ak ON ak.keyword_id = c.account_id
 WHERE c.user_id = " . $user_id . " AND c.export != 1 AND c.url IS NOT NULL AND c.pay_date IS NOT NULL AND s.shop_name IS NOT NULL
-AND ak.subject IS NOT NULL AND c.total IS NOT NULL AND c.percent IS NOT NULL AND c.id IN (" . $ids . ") ORDER BY c.created_at DESC";
+AND ak.subject IS NOT NULL AND c.total IS NOT NULL AND c.percent IS NOT NULL AND c.id IN (" . $ids . ") ORDER BY c.pay_date DESC";
             $data = DB::select($sql);
             $data = json_decode(json_encode($data, true), true);
             $ids = explode(',', $ids);
@@ -666,8 +667,9 @@ AND ak.subject IS NOT NULL AND c.total IS NOT NULL AND c.percent IS NOT NULL AND
         return view('software-history');
     }
     public function historySoftwareTable(){
-        $data = CostReport::whereNull('deleted_at')->get();
-        return view('software-history-table', compact('data'));
+        $data = CostReport::whereNull('deleted_at')->orderBy('created_at', 'desc')->get();
+        $user_code = Auth::user()->user_code;
+        return view('software-history-table', compact('data', 'user_code'));
     }
     public function historySoftwareDelete(Request $request){
         $ids = $request->ids;

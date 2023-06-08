@@ -20,7 +20,7 @@
 
     @foreach($data as $index => $item)
         <tr style="{{$item['status'] == 0 ? 'color: red' : ''}}">
-            <td class="p-0 border text-left align-middle px-1">{{$index+1}}</td>
+            <td class="p-0 border text-end align-middle px-1">{{$index+1}}</td>
             <td class="p-0 border text-left align-middle px-1">{{$item['user_code']}}</td>
             <td class="p-0 border text-left align-middle px-1">{{$item['name']}}</td>
             <td class="p-0 border text-left align-middle px-1">{{$item['type'] == 1 ? __('co-op') : ($item['type'] == 2 ? __('solo-pro') : __('alone'))}}</td>

@@ -16,7 +16,7 @@
                                     <div
                                         class="dt-action-buttons d-flex align-items-center justify-content-center justify-content-lg-end flex-lg-nowrap flex-wrap">
                                         <div class="dt-buttons">
-                                            <a class="dt-button add-new btn background-blue color-white" style="padding-right: 28px; padding-left: 28px" href="{{route('company.client-add')}}">
+                                            <a class="dt-button add-new btn btn-warning color-white" style="padding-right: 28px; padding-left: 28px" href="{{route('company.client-add')}}">
                                                 <span>{{__('new-add')}}</span></a>
                                         </div>
                                     </div>
@@ -51,7 +51,7 @@
                                     </div>
 
                                     <div class="col-md-2">
-                                        <button class="btn background-blue color-white mr-2" id="btn_get_table"
+                                        <button class="btn btn-warning color-white mr-2" id="btn_get_table"
                                                 onclick="event.preventDefault();getTableData('{{route('company.client-table')}}')">{{__('search')}}
                                         </button>
                                     </div>
@@ -59,7 +59,7 @@
                                         <div
                                             class="dt-action-buttons d-flex align-items-center justify-content-center justify-content-lg-end flex-lg-nowrap flex-wrap">
                                             <div class="dt-buttons">
-                                                <button type="button" class="dt-button add-new btn background-blue color-white" id="cost_export_excel"
+                                                <button type="button" class="dt-button add-new btn btn-warning color-white" id="cost_export_excel"
                                                         onclick="event.preventDefault();exportClientFile('{{route('company.client-export-csv')}}', 'csv')">
                                                     <i data-feather='download'></i>{{__('export')}}
                                                 </button>

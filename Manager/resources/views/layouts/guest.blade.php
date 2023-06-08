@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>最強無人秘書</title>
 
-{{--    <link rel="apple-touch-icon" href="{{ asset('theme/images/ico/apple-icon-120.png') }}">--}}
-{{--    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('theme/images/ico/favicon.ico') }}">--}}
+    <link rel="apple-touch-icon" href="{{ asset('icon/logo.png') }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('icon/logo.png') }}">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600"
           rel="stylesheet">
 

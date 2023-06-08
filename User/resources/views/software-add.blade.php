@@ -68,7 +68,7 @@
                                     </form>
                                     <div class="dt-action-buttons d-flex align-items-center justify-content-center justify-content-lg-end flex-lg-nowrap flex-wrap">
                                         <button type="button" class="dt-button add-new btn background-sky color-white" id="cost_export_excel"
-                                                onclick="event.preventDefault();exportFileSoftware('{{route('client.cost-export-csv-software')}}', 'csv', '{{trim($account_type)}}')">
+                                                onclick="event.preventDefault();exportFileSoftware('{{route('client.cost-export-csv-software')}}', 'csv', '{{trim($user_code)}}')">
                                             <i data-feather='download'></i>{{__('csv-download')}}
                                         </button>
                                     </div>

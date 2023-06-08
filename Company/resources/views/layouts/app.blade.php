@@ -78,7 +78,7 @@
 <!-- END: Main Menu-->
 
 <!-- BEGIN: Content-->
-<div class="app-content content kanban-application">
+<div class="app-content content kanban-application" style="overflow-x: hidden !important;">
     <div class="content-overlay"></div>
     <div class="header-navbar-shadow"></div>
     <div class="content-wrapper container-xxl p-0">

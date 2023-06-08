@@ -334,7 +334,7 @@ function exportFile(url, type, account){
         }
     });
 }
-function exportFileSoftware(url, type, account){
+function exportFileSoftware(url, type, code){
     var paramObj = new FormData($("#search_form")[0]);
     let ids = []
     $('.down_item').each(function (){
@@ -365,7 +365,7 @@ function exportFileSoftware(url, type, account){
             var downloadUrl = URL.createObjectURL(blob);
             var a = document.createElement("a");
             a.href = downloadUrl;
-            a.download = "顧客コード_" + today + "." + type;
+            a.download = code + "_" + today + "." + type;
             document.body.appendChild(a);
             a.click();
             window.location.reload()

@@ -21,7 +21,7 @@
 
     @foreach($data as $index => $item)
         <tr style="{{$item['status'] == 0 ? 'color: red' : ''}}">
-            <td class="p-0 border text-left align-middle px-1">{{$index+1}}</td>
+            <td class="p-0 border text-end align-middle px-1">{{$index+1}}</td>
             <td class="p-0 border text-left align-middle px-1">{{$item['user_code']}}</td>
             <td class="p-0 border text-left align-middle px-1">{{$item['name']}}</td>
             <td class="p-0 border text-left align-middle px-1">{{$item['type'] == 1 ? __('co-op') : ($item['type'] == 2 ? __('solo-pro') : __('alone'))}}</td>
@@ -40,11 +40,11 @@
                 <input type="hidden" value="{{$item['id']}}">
             </td>
             <td class="p-0 border text-left align-middle px-1">
-                <a href="{{route('company.client-cost', $item['id'])}}" target="_blank" class="btn background-sky color-blue waves-effect ex_change" style="padding: 8px; margin: 5px;">{{__('display')}}</a>
+                <a href="{{route('company.client-cost', $item['id'])}}" target="_blank" class="btn background-sky color-white waves-effect ex_change" style="padding: 8px; margin: 5px;">{{__('display')}}</a>
             </td>
             <td class="p-0 border text-left align-middle px-1">
                 <input type="hidden" value="{{$item['id']}}">
-                <a href="{{route('company.client-edit', $item['id'])}}" class="btn background-blue color-white waves-effect ex_change" style="padding: 8px; margin: 5px;">{{__('edit')}}</a>
+                <a href="{{route('company.client-edit', $item['id'])}}" class="btn btn-warning color-white waves-effect ex_change" style="padding: 8px; margin: 5px;">{{__('edit')}}</a>
             </td>
         </tr>
     @endforeach

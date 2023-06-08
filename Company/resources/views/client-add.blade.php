@@ -180,7 +180,7 @@
                                 <div class="row">
 
                                     <div class="col-12 text-center">
-                                        <button type="button" class="btn btn-dark me-1 btn_submit" onclick="event.preventDefault();saveForm('{{route('company.client-save')}}')" tabindex="12">{{__('register')}}</button>
+                                        <button type="button" class="btn btn-warning me-1 btn_submit" onclick="event.preventDefault();saveForm('{{route('company.client-save')}}')" tabindex="12">{{__('register')}}</button>
                                         @if(isset($user))
                                             <button type="reset" class="btn btn-danger waves-effect waves-float waves-light me-1" onclick="event.preventDefault();deleteData({{$user->id}}, '{{route('company.client-delete')}}')" tabindex="13">{{__('delete')}}</button>
                                         @endif

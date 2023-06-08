@@ -1,5 +1,5 @@
 <div class="main-menu menu-fixed menu-light menu-accordion menu-shadow background-dark-black color-white" data-scroll-to-active="true">
-    <div class="navbar-header">
+    <div class="navbar-header background-dark-red pt-0">
         <ul class="nav navbar-nav flex-row">
             <li class="nav-item me-auto">
                 <a class="navbar-brand" href="/"> <img src="{{asset('icon').'/logo.png'}}" style="width: 30px">
@@ -16,11 +16,6 @@
                     <i data-feather="user"></i><span class="menu-title text-truncate" data-i18n="{{__('client-manage')}}">{{__('client-manage')}}</span>
                 </a>
             </li>
-{{--            <li class="{{ str_contains(\Request::route()->getName(), 'account') ? 'active' : '' }} nav-item">--}}
-{{--                <a class="d-flex align-items-center" href="{{route('company.account-manage')}}">--}}
-{{--                    <i data-feather="briefcase"></i><span class="menu-title text-truncate" data-i18n="{{__('account-manage')}}">{{__('account-manage')}}</span>--}}
-{{--                </a>--}}
-{{--            </li>--}}
             <li class="{{ str_contains(\Request::route()->getName(), 'my') ? 'active' : '' }} nav-item">
                 <a class="d-flex align-items-center" href="{{route('company.my-page')}}">
                     <i data-feather="settings"></i><span class="menu-title text-truncate" data-i18n="{{__('my-page')}}">{{__('my-page')}}</span>

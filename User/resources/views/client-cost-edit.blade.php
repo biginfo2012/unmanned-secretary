@@ -127,7 +127,7 @@
                                         </div>
                                         <div class="mb-0 row">
                                             <label for="percent" class="col-sm-2 col-form-label-lg"
-                                                   style="padding-right: 0">{{__('percent')}}</label>
+                                                   style="padding-right: 0">{{__('percent-type')}}</label>
                                             <div class="col-sm-10" style="padding-left: 0">
                                                 <select class="form-select" id="percent" name="percent" tabindex="2" data-index="2">
                                                     <option value="8" {{$data['percent'] == 8 ? 'selected' : ''}}>{{__('eight')}}</option>
@@ -163,7 +163,7 @@
                                                     <i data-feather='download'></i>{{__('report')}}
                                                 </a>
                                                 <button type="button" class="btn background-sky color-white me-1 btn_submit" onclick="event.preventDefault();saveForm('{{route('client.cost-save')}}')" tabindex="8" {{$data->export == 1 ? 'disabled' : ''}}>{{__('save')}}</button>
-                                                <button type="reset" class="btn btn-danger waves-effect waves-float waves-light me-1" onclick="event.preventDefault();deleteData({{$data->id}}, '{{route('client.cost-delete')}}')" tabindex="9">{{__('delete')}}</button>
+                                                <button type="reset" class="btn btn-danger waves-effect waves-float waves-light me-1" onclick="event.preventDefault();deleteData({{$data->id}}, '{{route('client.cost-delete')}}')" tabindex="9" {{$data->export == 1 ? 'disabled' : ''}}>{{__('delete')}}</button>
                                                 <label class="btn btn-outline-secondary waves-effect " tabindex="10" id="btn_cancel">{{__('cancel')}}</label>
                                             </div>
                                         </div>

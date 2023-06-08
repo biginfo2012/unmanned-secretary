@@ -17,7 +17,7 @@
                 </div>
             </td>
             <td class="p-0 border text-left align-middle px-1">{{date('Y/m/d', strtotime($item['report_date']))}}</td>
-            <td class="p-0 border text-left align-middle px-1">{{"顧客コード_" . date('Ymd', strtotime($item['report_date']))}}</td>
+            <td class="p-0 border text-left align-middle px-1">{{$user_code . "_" . date('Ymd', strtotime($item['report_date']))}}</td>
             <td class="p-0 border text-left align-middle px-1">{{$item['report_count']}}</td>
         </tr>
     @endforeach
