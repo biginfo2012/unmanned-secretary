@@ -73,7 +73,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12 text-center">
-                                        <button type="button" class="btn btn-primary me-1 btn_submit" onclick="event.preventDefault();saveForm('{{route('client.account-save')}}')" tabindex="12">{{__('register')}}</button>
+                                        <button type="button" class="btn background-sky color-white me-1 btn_submit" onclick="event.preventDefault();saveForm('{{route('client.account-save')}}')" tabindex="12">{{__('register')}}</button>
 {{--                                        @if(isset($account))--}}
 {{--                                            <button type="reset" class="btn btn-dark waves-effect waves-float waves-light me-1" onclick="event.preventDefault();deleteData({{$account->id}}, '{{route('client.account-delete')}}')" tabindex="13">{{__('delete')}}</button>--}}
 {{--                                        @endif--}}

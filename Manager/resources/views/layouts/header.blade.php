@@ -5,7 +5,8 @@
             <ul class="nav navbar-nav d-xl-none">
                 <li class="nav-item"><a class="nav-link menu-toggle" href="#"><i class="ficon" data-feather="menu"></i></a></li>
             </ul>
-            <a class="color-white font-medium-4" href="/dashboard">{{__('manager-sub-title')}}</a>
+{{--            <a class="color-white font-medium-4" href="/dashboard">{{__('manager-sub-title')}}</a>--}}
+
         </div>
         <ul class="nav navbar-nav align-items-center ms-auto">
             <li class="nav-item dropdown dropdown-language me-3">

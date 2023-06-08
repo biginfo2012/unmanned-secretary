@@ -8,15 +8,15 @@
                     <div class="card">
                         <div class="card-body border-bottom">
                             <div
-                                class="d-flex justify-content-between align-items-center header-actions mx-2 row mt-75">
+                                class="d-flex justify-content-between align-items-center header-actions mx-2 row mt-75 me-0">
                                 <div class="col-sm-12 col-lg-4 d-flex justify-content-center justify-content-lg-start">
                                     <h4 class="card-title mb-0">{{__('company-manage')}}</h4>
                                 </div>
-                                <div class="col-sm-12 col-lg-8 ps-xl-75 ps-0">
+                                <div class="col-sm-12 col-lg-8 ps-xl-75 ps-0 pe-0">
                                     <div
                                         class="dt-action-buttons d-flex align-items-center justify-content-center justify-content-lg-end flex-lg-nowrap flex-wrap">
                                         <div class="dt-buttons">
-                                            <a class="dt-button add-new btn btn-dark" href="{{route('manager.company-add')}}">
+                                            <a class="dt-button add-new btn btn-dark" style="padding-left: 28px; padding-right: 28px" href="{{route('manager.company-add')}}">
                                                 <span>{{__('new-add')}}</span></a>
                                         </div>
                                     </div>

@@ -110,7 +110,7 @@
     "type-setting": "会計ソフト設定",
     "save": "保存",
     "please-select-soft": "会計ソフトを選択してください。",
-    "export": "エクスポート",
+    "export": "CSV出力",
     "half-string": "半角英数",
     "user-code": "顧客コード",
     "accounting": "会計",

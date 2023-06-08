@@ -1,5 +1,5 @@
 function getTableData(url) {
-    var paramObj = new FormData($('#search_form')[0]);
+    var paramObj = new FormData($('#search_form')[0])
     $.ajax({
         url: url,
         type: 'post',
@@ -11,14 +11,57 @@ function getTableData(url) {
             var t = $('#table');
             t.DataTable({
                 responsive: !0,
-                dom: "<'row'<'col-sm-12'tr>>\n\t\t\t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>",
+                dom: "<'row'<'col-sm-12 col-md-5 d-flex'<'pat-5'p><'pat-7'i>l>>\n\t\t\t<'row'<'col-sm-12'tr>>",
                 lengthMenu: [20, 50, 100],
                 pageLength: 20,
                 language: {
                     "decimal": "",
                     "emptyTable": "現在ありません",
-                    "info": "_TOTAL_中_START_から_END_を表示",
-                    "infoEmpty": "0~0の0を表示。",
+                    "info": "_START_~_END_/全_TOTAL_件",
+                    "infoEmpty": "0~0/全0件。",
+                    "infoFiltered": "(filtered from _MAX_ total entries)",
+                    "infoPostFix": "",
+                    "thousands": ",",
+                    "lengthMenu": " _MENU_ ",
+                    "loadingRecords": "ロード中...",
+                    "processing": "処理中...",
+                    "search": "検索:",
+                    "zeroRecords": "一致する検索資料がありません。",
+                    "paginate": {
+                        "first": "初めに",
+                        "last": "最後",
+                        "next": "次へ",
+                        "previous": "前へ"
+                    },
+                },
+            });
+        },
+        error: function () {}
+    });
+}
+function getCostTableData(url) {
+    var paramObj = new FormData($('#search_form')[0])
+    let down_item = $('#down_item')[0].checked
+    paramObj.append('down', down_item)
+    $.ajax({
+        url: url,
+        type: 'post',
+        data: paramObj,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            $('#table-part').html(response);
+            var t = $('#table');
+            t.DataTable({
+                responsive: !0,
+                dom: "<'row'<'col-sm-12 col-md-5 d-flex'<'pat-5'p><'pat-7'i>l>>\n\t\t\t<'row'<'col-sm-12'tr>>",
+                lengthMenu: [20, 50, 100],
+                pageLength: 20,
+                language: {
+                    "decimal": "",
+                    "emptyTable": "現在ありません",
+                    "info": "_START_~_END_/全_TOTAL_件",
+                    "infoEmpty": "0~0/全0件。",
                     "infoFiltered": "(filtered from _MAX_ total entries)",
                     "infoPostFix": "",
                     "thousands": ",",
@@ -52,13 +95,14 @@ function getTableDataNo(url) {
                 var t = $('#table');
                 t.DataTable({
                     responsive: !0,
-                    dom: "<'row'<'col-sm-12'tr>>\n\t\t\t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'p>>",
+                    dom: "<'row'<'col-sm-12 col-md-5 d-flex'<'pat-5'p><'pat-7'i>l>>\n\t\t\t<'row'<'col-sm-12'tr>>",
+                    lengthMenu: [20, 50, 100],
                     pageLength: 20,
                     language: {
                         "decimal": "",
                         "emptyTable": "現在ありません",
-                        "info": "_TOTAL_中_START_から_END_を表示",
-                        "infoEmpty": "0~0の0を表示。",
+                        "info": "_START_~_END_/全_TOTAL_件",
+                        "infoEmpty": "0~0/全0件。",
                         "infoFiltered": "(filtered from _MAX_ total entries)",
                         "infoPostFix": "",
                         "thousands": ",",
@@ -290,6 +334,90 @@ function exportFile(url, type, account){
         }
     });
 }
+function exportFileSoftware(url, type, account){
+    var paramObj = new FormData($("#search_form")[0]);
+    let ids = []
+    $('.down_item').each(function (){
+        console.log($(this).data('id'))
+        if($(this)[0].checked){
+            ids.push($(this).data('id'))
+        }
+    })
+    console.log(ids)
+    paramObj.append('ids', ids);
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    today =yyyy+mm+dd;
+    $.ajax({
+        url: url,
+        type: 'post',
+        data: paramObj,
+        contentType: false,
+        processData: false,
+        xhrFields:{
+            responseType: 'blob'
+        },
+        success: function (result) {
+            var blob = result;
+            var downloadUrl = URL.createObjectURL(blob);
+            var a = document.createElement("a");
+            a.href = downloadUrl;
+            a.download = "顧客コード_" + today + "." + type;
+            document.body.appendChild(a);
+            a.click();
+            window.location.reload()
+        }
+    });
+}
+function deleteSoftwareHistory(url, type, account){
+    var paramObj = new FormData($("#search_form")[0]);
+    let ids = []
+    $('.delete_item').each(function (){
+        if($(this)[0].checked){
+            ids.push($(this).data('id'))
+        }
+    })
+    if(ids.length){
+        paramObj.append('ids', ids);
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: paramObj,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                toastr.options = {
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                };
+                if(response.status == true){
+                    toastr.success("成功しました。");
+                    window.location.reload()
+                }
+                else {
+                    toastr.warning("失敗しました。");
+                }
+            }
+        });
+    }
+
+}
 
 $(".flatpickr").flatpickr({
     "locale": "ja",
@@ -301,3 +429,21 @@ $('#cost-img').click(function (e) {
     $('#imageModal').modal('show')
     $('#modal-img').attr('src', src)
 });
+
+$('#post_code_zip').on('input', function (){
+    zipCloudAddress($(this).val());
+})
+$('.btn_search_address').click(function (){
+    zipCloudAddress($('#post_code_zip').val())
+})
+function zipCloudAddress(value) {
+    fetch(`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${value}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            $('#prefecture').val(data.results[0].address1);
+            $('#city').val(data.results[0].address2);
+            $('#town').val(data.results[0].address3);
+        })
+        .catch(error => console.log(error))
+}

@@ -168,8 +168,8 @@
 {{--                                           href="{{route('company.cost-export-pdf', $data->id)}}">--}}
 {{--                                            <i data-feather='download'></i>{{__('report')}}--}}
 {{--                                        </a>--}}
-                                        <button type="button" class="btn btn-primary me-1 btn_submit" onclick="event.preventDefault();saveForm('{{route('company.client-cost-save')}}')" tabindex="12">{{__('register')}}</button>
-                                        <button type="reset" class="btn btn-dark waves-effect waves-float waves-light me-1" onclick="event.preventDefault();deleteData({{$data->id}}, '{{route('company.client-cost-delete')}}')" tabindex="13">{{__('delete')}}</button>
+                                        <button type="button" class="btn btn-dark me-1 btn_submit" onclick="event.preventDefault();saveForm('{{route('company.client-cost-save')}}')" tabindex="12">{{__('register')}}</button>
+                                        <button type="reset" class="btn btn-danger waves-effect waves-float waves-light me-1" onclick="event.preventDefault();deleteData({{$data->id}}, '{{route('company.client-cost-delete')}}')" tabindex="13">{{__('delete')}}</button>
                                         <label class="btn btn-outline-secondary waves-effect " tabindex="14" id="btn_cancel">{{__('cancel')}}</label>
                                     </div>
                                 </div>

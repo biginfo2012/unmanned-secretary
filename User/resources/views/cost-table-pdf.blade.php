@@ -1,170 +1,3 @@
-{{--<!DOCTYPE html>--}}
-{{--<html class="loading" lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-textdirection="ltr">--}}
-{{--<head>--}}
-{{--    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">--}}
-{{--    <title>{{ config('app.name', 'Laravel') }}</title>--}}
-{{--</head>--}}
-{{--<body>--}}
-
-{{--<x-guest-layout>--}}
-{{--    <style>--}}
-{{--        @font-face {--}}
-{{--            font-family: ipag;--}}
-{{--            font-style: normal;--}}
-{{--            font-weight: normal;--}}
-{{--            src: url('{{ storage_path('fonts/ipag.ttf') }}');--}}
-{{--        }--}}
-
-{{--        body {--}}
-{{--            font-family: ipag !important;--}}
-{{--        }--}}
-{{--        .row {--}}
-{{--            display: flex;--}}
-{{--            flex-wrap: wrap;--}}
-{{--        }--}}
-
-{{--        .row > * {--}}
-{{--            width: 100%;--}}
-{{--            max-width: 100%;--}}
-{{--        }--}}
-{{--        .col-1 {--}}
-{{--            flex: 0 0 auto;--}}
-{{--            width: 8.33333%; }--}}
-
-{{--        .col-2 {--}}
-{{--            flex: 0 0 auto;--}}
-{{--            width: 16.66667%; }--}}
-
-{{--        .col-3 {--}}
-{{--            flex: 0 0 auto;--}}
-{{--            width: 25%; }--}}
-
-{{--        .col-4 {--}}
-{{--            flex: 0 0 auto;--}}
-{{--            width: 33.33333%; }--}}
-
-{{--        .col-5 {--}}
-{{--            flex: 0 0 auto;--}}
-{{--            width: 41.66667%; }--}}
-
-{{--        .col-6 {--}}
-{{--            flex: 0 0 auto;--}}
-{{--            width: 50%; }--}}
-
-{{--        .col-7 {--}}
-{{--            flex: 0 0 auto;--}}
-{{--            width: 58.33333%; }--}}
-
-{{--        .col-8 {--}}
-{{--            flex: 0 0 auto;--}}
-{{--            width: 66.66667%; }--}}
-
-{{--        .col-9 {--}}
-{{--            flex: 0 0 auto;--}}
-{{--            width: 75%; }--}}
-
-{{--        .col-10 {--}}
-{{--            flex: 0 0 auto;--}}
-{{--            width: 83.33333%; }--}}
-
-{{--        .col-11 {--}}
-{{--            flex: 0 0 auto;--}}
-{{--            width: 91.66667%; }--}}
-
-{{--        .col-12 {--}}
-{{--            flex: 0 0 auto;--}}
-{{--            width: 100%; }--}}
-
-{{--        .w-100 {--}}
-{{--            width: 100% !important; }--}}
-{{--    </style>--}}
-{{--    <div style="display: flex; flex-wrap: wrap; width: 100%">--}}
-{{--        <div style="flex: 0 0 auto; width: 50%;">--}}
-{{--            <div class="row">--}}
-{{--                <label class="col-3">{{__('photo')}}</label>--}}
-{{--                <div class="col-9">--}}
-{{--                    @if(!empty($data[0]['url']))--}}
-{{--                        <img src="{{asset('upload').'/'.$data[0]['url']}}" style="max-width: 50%; height: auto">--}}
-{{--                    @endif--}}
-{{--                </div>--}}
-{{--            </div>--}}
-{{--        </div>--}}
-{{--        <div style="flex: 0 0 auto; width: 50%;">--}}
-{{--            <div class="row">--}}
-{{--                <div class="col-6">--}}
-{{--                    <div class="row">--}}
-{{--                        <label class="col-4">{{__('pay-date')}}</label>--}}
-{{--                        <div class="col-8">--}}
-{{--                            <span>{{!empty($data[0]['pay_date']) ? date('Y/m/d', strtotime($data[0]['pay_date'])) : ""}}</span>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--                <div class="col-6">--}}
-{{--                    <div class="row">--}}
-{{--                        <label class="col-4">{{__('cost-code')}}</label>--}}
-{{--                        <div class="col-8">--}}
-{{--                            <span>{{!empty($data[0]['cost_code']) ? $data[0]['cost_code'] : ""}}</span>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-{{--                    <div class="mb-0 row">--}}
-{{--                        <label for="shop-name" class="col-sm-2 col-form-label-lg"--}}
-{{--                               style="padding-right: 0">{{__('summary')}}</label>--}}
-{{--                        <div class="col-sm-10" style="padding-left: 0">--}}
-{{--                            <span>{{!empty($data[0]['shop_id']) ? $data[0]['shop']['shop_name'] : ""}}</span>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                    <div class="mb-0 row">--}}
-{{--                        <label for="account_id" class="col-sm-2 col-form-label-lg"--}}
-{{--                               style="padding-right: 0">{{__('account-item')}}</label>--}}
-{{--                        <div class="col-sm-10" style="padding-left: 0">--}}
-{{--                            <span>{{!empty($data[0]['account_id']) ? $data[0]['account']['subject'] : ''}}</span>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                    <div class="mb-0 row">--}}
-{{--                        <label for="total" class="col-sm-2 col-form-label-lg"--}}
-{{--                               style="padding-right: 0">{{__('amount')}}</label>--}}
-{{--                        <div class="col-sm-10" style="padding-left: 0">--}}
-{{--                            <span>{{$data[0]['total']}}</span>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                    <div class="mb-0 row">--}}
-{{--                        <label for="percent" class="col-sm-2 col-form-label-lg"--}}
-{{--                               style="padding-right: 0">{{__('percent')}}</label>--}}
-{{--                        <div class="col-sm-10" style="padding-left: 0">--}}
-{{--                            <span>{{$data[0]['percent']}}％</span>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                    <div class="row" style="margin-bottom: 5px">--}}
-{{--                        <label for="content" class="col-sm-2 col-form-label-lg"--}}
-{{--                               style="padding-right: 0">{{__('content')}}</label>--}}
-{{--                        <div class="col-sm-10" style="padding-left: 0">--}}
-{{--                            <span>{{$data[0]['content']}}</span>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                    <div class="mb-0 row">--}}
-{{--                        <label for="note" class="col-sm-2 col-form-label-lg"--}}
-{{--                               style="padding-right: 0">{{__('note')}}</label>--}}
-{{--                        <div class="col-sm-10" style="padding-left: 0">--}}
-{{--                            <span>{{$data[0]['note']}}</span>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                    <div class="mb-0 row">--}}
-{{--                        <label for="remarks" class="col-sm-2 col-form-label-lg"--}}
-{{--                               style="padding-right: 0">{{__('import-date')}}</label>--}}
-{{--                        <div class="col-sm-10" style="padding-left: 0">--}}
-{{--                            <p class="mb-0"--}}
-{{--                               style="margin-top: 10px">{{date('Y/m/d', strtotime($data[0]['created_at']))}}</p>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--        </div>--}}
-{{--    </div>--}}
-{{--</x-guest-layout>--}}
-
-{{--</body>--}}
-{{--</html>--}}
-
 <!DOCTYPE html>
 <html class="loading" lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-textdirection="ltr">
 <head>
@@ -345,29 +178,16 @@
     <title></title>
 </head>
 <body>
-<header id="header">
-    <div class="container">
-        <div class="table-wrapper">
-            <table>
-                <tr>
-                    <td class="col12">
-                        <h1 style="font-size: 1.6em; margin-bottom: 10pt;">レシート</h1>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </div>
-</header>
 <main>
     <div class="container">
-        <h2>レシート詳細</h2>
+        <h2 style="padding: 30pt 0 15pt 0;">領収書詳細</h2>
         <table style="margin: 0 -15pt;">
             <tr>
                 <td class="col6" style="text-align: center; vertical-align: middle;">
 {{--                    @if(!empty($data[0]['url']))--}}
 {{--                        <img alt="image" src="{{asset('upload').'/'.$data[0]['url']}}" style="height: 360px">--}}
 {{--                    @endif--}}
-                   <img alt="Test Team" src="{{asset('upload').'/'.$data[0]['url']}}" style="height: 350px;">
+                   <img alt="Test Team" src="{{asset('upload').'/'.$data[0]['url']}}" style="height: auto; width: 100%">
                 </td>
                 <td class="col6">
                     <table class="details-column-table">
@@ -389,7 +209,7 @@
                         </tr>
                         <tr>
                             <td class="label">金額:</td>
-                            <td class="value">{{$data[0]['total']}}円</td>
+                            <td class="value">{{number_format($data[0]['total'])}}円</td>
                         </tr>
                         <tr>
                             <td class="label">税:</td>

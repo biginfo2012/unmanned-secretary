@@ -34,6 +34,7 @@ Route::group(['middleware' => 'auth'], function (){
         Route::post('client-change-status', [CompanyController::class, 'changeStatusClient'])->name('company.client-change-status');
         Route::post('client-delete', [CompanyController::class, 'deleteClient'])->name('company.client-delete');
         Route::post('client-table', [CompanyController::class, 'tableClient'])->name('company.client-table');
+        Route::post('client-export-csv', [CompanyController::class, 'clientExportCSV'])->name('company.client-export-csv');
         //顧客別経費一覧機能
         Route::get('client-cost/{id}', [CompanyController::class, 'costClient'])->name('company.client-cost');
         Route::post('client-cost-table', [CompanyController::class, 'tableClientCost'])->name('company.client-cost-table');

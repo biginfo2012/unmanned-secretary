@@ -6,14 +6,10 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-                        <div class="card-body border-bottom">
-                            <div class="d-flex justify-content-between align-items-center header-actions mx-2 row mt-75 me-0">
+                        <div class="card-body pb-0">
+                            <div class="d-flex justify-content-between align-items-center header-actions row mt-75 mx-0">
                                 <div class="col-sm-12 col-lg-4 d-flex justify-content-center justify-content-lg-start">
-                                    <h4 class="card-title mb-0">{{__('account-manage')}}</h4>
-                                </div>
-                                <div class="col-sm-12 col-lg-8 ps-xl-75 ps-0 pe-0">
-                                    <div
-                                        class="dt-action-buttons d-flex align-items-center justify-content-center justify-content-lg-end flex-lg-nowrap flex-wrap">
+                                    <div class="dt-action-buttons d-flex align-items-center justify-content-center justify-content-lg-end flex-lg-nowrap flex-wrap">
                                         <!-- End Offcanvas -->
                                         <div class="mt-1 me-2">
                                             <p>{{__('account-type')}} : {{$account_type}}<span></span></p>
@@ -66,62 +62,51 @@
                                         <!--/ End Offcanvas-->
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-{{--                        <div class="card-body m-0 pb-0">--}}
-{{--                            <div class="d-flex justify-content-between align-items-center header-actions mx-0 row mb-0">--}}
-{{--                                <div class="col-sm-12 col-lg-4 d-flex justify-content-center justify-content-lg-start mb-0">--}}
-{{--                                    <h5 class="mb-0">{{__('account-manage')}}</h5>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-                        <div class="card-body mt-0 pb-0">
-                            <form class="dt_adv_search" method="POST" id="search_form">
-                                @csrf
-                                <div class="row g-1 mb-md-0">
-                                    <div class="col-md-2">
-                                        <div class="mb-1 row">
-                                            <div class="col-sm-12">
-                                                <input type="text" class="form-control" id="colFormLabel" name="subject"
-                                                       placeholder="{{__('account-subject-name')}}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="mb-1 row">
-                                            <div class="col-sm-12">
-                                                <input type="text" class="form-control" id="colFormLabel" name="code"
-                                                       placeholder="{{__('subject-code')}}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="mb-1 row">
-                                            <div class="col-sm-12">
-                                                <input type="text" class="form-control" id="colFormLabel" name="keyword"
-                                                       placeholder="{{__('keyword')}}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <button class="btn background-sky color-white mr-2" id="btn_get_table"
-                                                onclick="event.preventDefault();getTableData('{{route('client.account-table')}}')">{{__('search')}}
+                                <div class="col-sm-12 col-lg-8 ps-xl-75 ps-0 pe-0">
+                                    <form class="dt_adv_search" method="POST" id="search_form">
+                                        @csrf
+                                    </form>
+                                    <div class="dt-action-buttons d-flex align-items-center justify-content-center justify-content-lg-end flex-lg-nowrap flex-wrap">
+                                        <button type="button" class="dt-button add-new btn background-sky color-white" id="cost_export_excel"
+                                                onclick="event.preventDefault();exportFileSoftware('{{route('client.cost-export-csv-software')}}', 'csv', '{{trim($account_type)}}')">
+                                            <i data-feather='download'></i>{{__('csv-download')}}
                                         </button>
                                     </div>
-                                    <div class="col-md-4">
-                                        <div
-                                            class="dt-action-buttons d-flex align-items-center justify-content-center justify-content-lg-end flex-lg-nowrap flex-wrap">
-                                            <div class="dt-buttons">
-                                                <a class="dt-button add-new btn background-sky color-white" href="{{route('client.account-add')}}">
-                                                    <span>{{__('new-add')}}</span></a>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                         <div class="card-body pt-0" id="table-part">
+                            <table class="table table-separate table-head-custom table-checkable" id="table">
+                                <thead>
+                                <tr>
+                                    <th class="text-center" width="5%"></th>
+                                    <th class="text-center" width="5%">No</th>
+                                    <th class="text-center" width="10%">{{__('pay-date')}}</th>
+                                    <th class="text-center" width="20%">{{__('summary')}}</th>
+                                    <th class="text-center" width="20%">{{__('account-item')}}</th>
+                                    <th class="text-center" width="20%">{{__('price-down')}}</th>
+                                    <th class="text-center" width="20%">{{__('import-date')}}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
 
+                                @foreach($data as $index => $item)
+                                    <tr class="table-info">
+                                        <td class="p-0 border text-left align-middle px-1">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input down_item" type="checkbox" id="inlineCheckbox_{{$item['id']}}" data-id="{{$item['id']}}" checked/>
+                                            </div>
+                                        </td>
+                                        <td class="p-0 border text-left align-middle px-1">{{$index+1}}</td>
+                                        <td class="p-0 border text-left align-middle px-1">{{!empty($item['pay_date']) ? date('Y/m/d', strtotime($item['pay_date'])) : ""}}</td>
+                                        <td class="p-0 border text-left align-middle px-1">{{!empty($item['shop_name']) ? $item['shop_name'] : ""}}</td>
+                                        <td class="p-0 border text-left align-middle px-1">{{!empty($item['subject']) ? $item['subject'] : ""}}</td>
+                                        <td class="p-0 border text-left align-middle px-1">{{!empty($item['total']) ? number_format($item['total']) . "円": ""}}</td>
+                                        <td class="p-0 border text-left align-middle px-1">{{date('Y/m/d', strtotime($item['created_at']))}}</td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -131,7 +116,17 @@
     <!--end::Content-->
     <script>
         addEventListener('pageshow', (event) => {
-            getTableData('{{route('client.account-table')}}');
+            //getTableData('{{route('client.account-table')}}');
         });
+        $(document).ready(function () {
+            $('input.down_item[type=checkbox]').click(function () {
+                if($(this)[0].checked){
+                    $(this).parent().parent().parent().addClass('table-info')
+                }
+                else{
+                    $(this).parent().parent().parent().removeClass('table-info')
+                }
+            })
+        })
     </script>
 </x-app-layout>

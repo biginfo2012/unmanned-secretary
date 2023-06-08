@@ -103,6 +103,7 @@ class CompanyController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'user_code' => $request->user_code,
+                'contact' => $request->contact,
                 'post_code' => $request->post_code,
                 'address' => $request->address,
                 'contact' => $request->contact,

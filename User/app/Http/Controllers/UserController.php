@@ -7,6 +7,7 @@ use App\Models\Account;
 use App\Models\AccountKeyword;
 use App\Models\AccountType;
 use App\Models\Cost;
+use App\Models\CostReport;
 use App\Models\Shop;
 use App\Models\TaxType;
 use App\Models\User;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 //use niklasravnsborg\LaravelPdf\Facades\Pdf;
 use PDF;
+use function Ramsey\Uuid\v1;
 
 class UserController extends Controller
 {
@@ -25,16 +27,70 @@ class UserController extends Controller
         $user = Auth::user();
         $type_id = Auth::user()->account_type;
         $account_type = AccountType::find($type_id)->name;
-        return view('client-cost-manage', compact('user', 'account_type'));
+        $accounts = Account::where('type_id', $type_id)->get();
+        return view('client-cost-manage', compact('user', 'account_type', 'accounts'));
     }
 
     public function tableCost(Request $request)
     {
         $user_id = Auth::user()->id;
         $type_id = Auth::user()->account_type;
-        $sql = "SELECT c.id, c.pay_date, c.content, c.total, c.percent, c.url, c.note, c.`status`, c.created_at, s.shop_name, ak.`subject`, ak.keyword_id FROM costs AS c
+        $account_keyword = $request->account_keyword;
+        $keyword = $request->keyword;
+        $down = $request->down;
+        if($down == 'true'){
+            if(isset($keyword)){
+                if(isset($account_keyword)){
+                    $sql = "SELECT c.id, c.pay_date, c.content, c.total, c.percent, c.url, c.note, c.`status`, c.created_at, c.export, s.shop_name, ak.`subject`, ak.keyword_id FROM costs AS c
+LEFT JOIN shops AS s ON s.id = c.shop_id LEFT JOIN (SELECT a.`subject`, a.keyword_id FROM accounts as a WHERE a.type_id = " . $type_id . ") AS ak ON ak.keyword_id = c.account_id
+WHERE c.user_id = " . $user_id . " AND s.shop_name like '%" . $keyword . "%' AND ak.keyword_id = " . $account_keyword . " ORDER BY c.created_at DESC";
+                }
+                else{
+                    $sql = "SELECT c.id, c.pay_date, c.content, c.total, c.percent, c.url, c.note, c.`status`, c.created_at, c.export, s.shop_name, ak.`subject`, ak.keyword_id FROM costs AS c
+LEFT JOIN shops AS s ON s.id = c.shop_id LEFT JOIN (SELECT a.`subject`, a.keyword_id FROM accounts as a WHERE a.type_id = " . $type_id . ") AS ak ON ak.keyword_id = c.account_id
+WHERE c.user_id = " . $user_id . " AND s.shop_name like '%" . $keyword . "%' ORDER BY c.created_at DESC";
+                }
+            }
+            else{
+                if(isset($account_keyword)){
+                    $sql = "SELECT c.id, c.pay_date, c.content, c.total, c.percent, c.url, c.note, c.`status`, c.created_at, c.export, s.shop_name, ak.`subject`, ak.keyword_id FROM costs AS c
+LEFT JOIN shops AS s ON s.id = c.shop_id LEFT JOIN (SELECT a.`subject`, a.keyword_id FROM accounts as a WHERE a.type_id = " . $type_id . ") AS ak ON ak.keyword_id = c.account_id
+WHERE c.user_id = " . $user_id . " AND ak.keyword_id = " . $account_keyword . " ORDER BY c.created_at DESC";
+                }
+                else{
+                    $sql = "SELECT c.id, c.pay_date, c.content, c.total, c.percent, c.url, c.note, c.`status`, c.created_at, c.export, s.shop_name, ak.`subject`, ak.keyword_id FROM costs AS c
 LEFT JOIN shops AS s ON s.id = c.shop_id LEFT JOIN (SELECT a.`subject`, a.keyword_id FROM accounts as a WHERE a.type_id = " . $type_id . ") AS ak ON ak.keyword_id = c.account_id
 WHERE c.user_id = " . $user_id . " ORDER BY c.created_at DESC";
+                }
+            }
+        }
+        else{
+            if(isset($keyword)){
+                if(isset($account_keyword)){
+                    $sql = "SELECT c.id, c.pay_date, c.content, c.total, c.percent, c.url, c.note, c.`status`, c.created_at, c.export, s.shop_name, ak.`subject`, ak.keyword_id FROM costs AS c
+LEFT JOIN shops AS s ON s.id = c.shop_id LEFT JOIN (SELECT a.`subject`, a.keyword_id FROM accounts as a WHERE a.type_id = " . $type_id . ") AS ak ON ak.keyword_id = c.account_id
+WHERE c.user_id = " . $user_id . " AND s.shop_name like '%" . $keyword . "%' AND ak.keyword_id = " . $account_keyword . " AND c.export != 1 ORDER BY c.created_at DESC";
+                }
+                else{
+                    $sql = "SELECT c.id, c.pay_date, c.content, c.total, c.percent, c.url, c.note, c.`status`, c.created_at, c.export, s.shop_name, ak.`subject`, ak.keyword_id FROM costs AS c
+LEFT JOIN shops AS s ON s.id = c.shop_id LEFT JOIN (SELECT a.`subject`, a.keyword_id FROM accounts as a WHERE a.type_id = " . $type_id . ") AS ak ON ak.keyword_id = c.account_id
+WHERE c.user_id = " . $user_id . " AND s.shop_name like '%" . $keyword . "%' AND c.export != 1 ORDER BY c.created_at DESC";
+                }
+            }
+            else{
+                if(isset($account_keyword)){
+                    $sql = "SELECT c.id, c.pay_date, c.content, c.total, c.percent, c.url, c.note, c.`status`, c.created_at, c.export, s.shop_name, ak.`subject`, ak.keyword_id FROM costs AS c
+LEFT JOIN shops AS s ON s.id = c.shop_id LEFT JOIN (SELECT a.`subject`, a.keyword_id FROM accounts as a WHERE a.type_id = " . $type_id . ") AS ak ON ak.keyword_id = c.account_id
+WHERE c.user_id = " . $user_id . " AND ak.keyword_id = " . $account_keyword . " AND c.export != 1 ORDER BY c.created_at DESC";
+                }
+                else{
+                    $sql = "SELECT c.id, c.pay_date, c.content, c.total, c.percent, c.url, c.note, c.`status`, c.created_at, c.export, s.shop_name, ak.`subject`, ak.keyword_id FROM costs AS c
+LEFT JOIN shops AS s ON s.id = c.shop_id LEFT JOIN (SELECT a.`subject`, a.keyword_id FROM accounts as a WHERE a.type_id = " . $type_id . ") AS ak ON ak.keyword_id = c.account_id
+WHERE c.user_id = " . $user_id . " AND c.export != 1 ORDER BY c.created_at DESC";
+                }
+            }
+        }
+
         $data = DB::select($sql);
         $data = json_decode(json_encode($data, true), true);
         return view('client-cost-table', compact('data'));
@@ -56,15 +112,6 @@ WHERE c.user_id = " . $user_id . " ORDER BY c.created_at DESC";
 
         Cost::find($id)->update(['status' => 1]);
         return view('client-cost-edit', compact('data', 'accounts', 'myaccount'));
-//        $data = Cost::with('user', 'shop', 'account')->where('id', $id)->get()->toArray();
-        // share data to view
-        //view()->share('employee',$data);
-//        $data = [
-//            'data' => $data
-//        ];
-
-//        return view('cost-table-pdf', compact('data'));
-
     }
     public function saveCost(Request $request)
     {
@@ -269,7 +316,7 @@ WHERE a.type_id = " . $type_id . ") AS ak ON ak.keyword_id = c.account_id WHERE 
 //        return $pdf->stream('document.pdf');
 
         $pdf = PDF::loadView('cost-table-pdf', $data);
-        return $pdf->download('レシート詳細' . date('YmdHis') . '.pdf');
+        return $pdf->download('領収書詳細' . date('YmdHis') . '.pdf');
     }
 
     public function manageAccount(){
@@ -453,7 +500,10 @@ WHERE a.type_id = " . $type_id . ") AS ak ON ak.keyword_id = c.account_id WHERE 
                 'name' => $request->name,
                 'password' => Hash::make($request->password),
                 'post_code' => $request->post_code,
-                'address' => $request->address,
+                'prefecture' => $request->prefecture,
+                'city' => $request->city,
+                'town' => $request->town,
+                'after' => $request->after,
                 'contact' => $request->contact,
                 'charge' => $request->charge,
                 'remarks' => $request->remarks,
@@ -465,7 +515,10 @@ WHERE a.type_id = " . $type_id . ") AS ak ON ak.keyword_id = c.account_id WHERE 
             $data = [
                 'name' => $request->name,
                 'post_code' => $request->post_code,
-                'address' => $request->address,
+                'prefecture' => $request->prefecture,
+                'city' => $request->city,
+                'town' => $request->town,
+                'after' => $request->after,
                 'contact' => $request->contact,
                 'charge' => $request->charge,
                 'remarks' => $request->remarks,
@@ -476,6 +529,150 @@ WHERE a.type_id = " . $type_id . ") AS ak ON ak.keyword_id = c.account_id WHERE 
         }
         User::find($id)->update($data);
 
+        return response()->json(['status' => true]);
+    }
+
+    public function addSoftware(){
+        $account_type_id = Auth::user()->account_type;
+        $account_type = AccountType::find($account_type_id)->name;
+        $account_types = AccountType::all();
+
+        $user_id = Auth::user()->id;
+        $type_id = Auth::user()->account_type;
+        $sql = "SELECT c.id, c.pay_date, c.content, c.total, c.percent, c.url, c.note, c.`status`, c.created_at, c.export, s.shop_name, ak.`subject`, ak.keyword_id FROM costs AS c
+LEFT JOIN shops AS s ON s.id = c.shop_id LEFT JOIN (SELECT a.`subject`, a.keyword_id FROM accounts as a WHERE a.type_id = " . $type_id . ") AS ak ON ak.keyword_id = c.account_id
+WHERE c.user_id = " . $user_id . " AND c.export != 1 AND c.url IS NOT NULL AND c.pay_date IS NOT NULL AND s.shop_name IS NOT NULL AND ak.subject IS NOT NULL AND c.total IS NOT NULL AND c.percent IS NOT NULL ORDER BY c.created_at DESC";
+        $data = DB::select($sql);
+        $data = json_decode(json_encode($data, true), true);
+        return view('software-add', compact('account_types', 'account_type', 'data'));
+    }
+    public function costExportCSVSoftware(Request $request){
+        $account_type_id = Auth::user()->account_type;
+        $account_type = AccountType::find($account_type_id)->name;
+        $user_id = Auth::user()->id;
+        $type_id = Auth::user()->account_type;
+        $ids = $request->ids;
+        if(isset($ids)){
+            $sql = "SELECT c.id, c.pay_date, c.content, c.total, c.percent, c.url, c.note, c.`status`, c.created_at, c.export, s.shop_name, ak.`subject`, ak.keyword_id FROM costs AS c
+LEFT JOIN shops AS s ON s.id = c.shop_id LEFT JOIN (SELECT a.`subject`, a.keyword_id FROM accounts as a WHERE a.type_id = " . $type_id . ") AS ak ON ak.keyword_id = c.account_id
+WHERE c.user_id = " . $user_id . " AND c.export != 1 AND c.url IS NOT NULL AND c.pay_date IS NOT NULL AND s.shop_name IS NOT NULL
+AND ak.subject IS NOT NULL AND c.total IS NOT NULL AND c.percent IS NOT NULL AND c.id IN (" . $ids . ") ORDER BY c.created_at DESC";
+            $data = DB::select($sql);
+            $data = json_decode(json_encode($data, true), true);
+            $ids = explode(',', $ids);
+            Cost::whereIn('id', $ids)->update(['export' => 1]);
+            $fileName = '経費一覧.csv';
+
+            $headers = array(
+                "Content-type"        => "text/csv",
+                "Content-Disposition" => "attachment; filename=$fileName",
+                "Pragma"              => "no-cache",
+                "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+                "Expires"             => "0"
+            );
+
+            $callback = function() use($data, $account_type) {
+                $file = fopen('php://output', 'w');
+                //fputcsv($file, $columns);
+
+                foreach ($data as $index => $task) {
+                    if($account_type == "会計王"){
+                        $row[] = "*";
+                        $row[] = $index + 1;
+                        $row[]  = !empty($task['pay_date']) ? date('Y/m/d', strtotime($task['pay_date'])) : "";
+                        $row[]  = mb_convert_encoding($task['code'], "SJIS-win", "UTF-8");
+                        $row[]  = mb_convert_encoding($task['subject'], "SJIS-win", "UTF-8");
+                        $row[]  = 0;
+                        $row[]  = "";
+                        $row[]  = 0;
+                        $row[]  = "";
+                        $row[]  = 21;
+                        $row[]  = 0;
+                        $row[]  = 3;
+                        $row[]  = !empty($task['percent']) ? $task['percent'] . "%" : "";
+                        $row[] = $task['total'];
+                        $row[]  = "";
+                        $row[]  = 100;
+                        $row[]  = mb_convert_encoding("現金", "SJIS-win", "UTF-8");
+                        $row[]  = 0;
+                        $row[]  = "";
+                        $row[]  = 0;
+                        $row[]  = "";
+                        $row[]  = 0;
+                        $row[]  = 0;
+                        $row[]  = 3;
+                        $row[]  = "0%";
+                        $row[] = $task['total'];
+                        $row[]  = "";
+                        $row[]  = mb_convert_encoding($task['shop_name'], "SJIS-win", "UTF-8");
+                        $row[]  = "";
+                        $row[]  = "";
+                        $row[]  = 0;
+                        $row[]  = 0;
+                        $row[]  = 0;
+                        $row[]  = "";
+                    }
+                    else if($account_type == "弥生会計"){
+                        $row[] = "2111";
+                        $row[] = $index + 1;
+                        $row[]  = "";
+                        $row[]  = !empty($task['pay_date']) ? date('Y/m/d', strtotime($task['pay_date'])) : "";
+                        $row[]  = mb_convert_encoding($task['subject'], "SJIS-win", "UTF-8");
+                        $row[]  = "";
+                        $row[]  = "";
+                        $row[]  = mb_convert_encoding($task['tax_type'], "SJIS-win", "UTF-8");
+                        $row[] = $task['total'];
+                        $row[] = !empty($task['percent']) ? (int)($task['total'] * $task['percent'] / 100) : "";
+                        $row[]  = mb_convert_encoding("現金", "SJIS-win", "UTF-8");
+                        $row[]  = "";
+                        $row[]  = "";
+                        $row[]  = mb_convert_encoding("対象外", "SJIS-win", "UTF-8");
+                        $row[] = $task['total'];
+                        $row[]  = 0;
+                        $row[]  = mb_convert_encoding($task['shop_name'], "SJIS-win", "UTF-8");
+                        $row[]  = "";
+                        $row[]  = "";
+                        $row[]  = 3;
+                        $row[]  = "";
+                        $row[]  = "";
+                        $row[]  = "";
+                        $row[]  = "";
+                        $row[]  = "NO";
+                    }
+                    else{
+                        $row[]  = !empty($task['pay_date']) ? date('Y/m/d', strtotime($task['pay_date'])) : "";
+                        $row[]  = mb_convert_encoding($task['shop_name'], "SJIS-win", "UTF-8");
+                        $row[]  = mb_convert_encoding($task['subject'], "SJIS-win", "UTF-8");
+                        $row[]  = !empty($task['percent']) ? $task['percent'] . "%" : "";
+                        $row[] = $task['total'];
+                        $row[] = mb_convert_encoding($task['note'], "SJIS-win", "UTF-8");
+                    }
+
+                    fputcsv($file, $row);
+                    $row = [];
+                }
+
+                fclose($file);
+            };
+            CostReport::create(['report_date' => date('Y-m-d'), 'report_count' => count($ids)]);
+            return response()->stream($callback, 200, $headers);
+        }
+        else{
+            return response()->json(['status' => false]);
+        }
+
+    }
+    public function historySoftware(){
+        return view('software-history');
+    }
+    public function historySoftwareTable(){
+        $data = CostReport::whereNull('deleted_at')->get();
+        return view('software-history-table', compact('data'));
+    }
+    public function historySoftwareDelete(Request $request){
+        $ids = $request->ids;
+        $ids = explode(',', $ids);
+        CostReport::whereIn('id', $ids)->update(['deleted_at' => date('Y-m-d H:i:s')]);
         return response()->json(['status' => true]);
     }
 }

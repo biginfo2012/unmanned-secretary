@@ -60,6 +60,50 @@
                                     </div>
                                 </div>
                                 <div class="row">
+                                    <div class="mb-1 col-md-6">
+                                        <div class="mb-1 row">
+                                            <label for="represent" class="col-sm-2 col-form-label-lg"
+                                                   style="padding-right: 0">{{__('represent')}} <span class="color-red-tmp">*</span></label>
+                                            <div class="col-sm-6" style="padding-left: 0">
+                                                <input type="text" id="represent" class="form-control" name="represent" placeholder="" value="{{isset($user) ? $user->represent : ''}}" required tabindex="11"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-1 col-md-6">
+                                        <div class="mb-1 row">
+                                            <label for="charge" class="col-sm-2 col-form-label-lg"
+                                                   style="padding-right: 0">{{__('charge')}} <span class="color-red-tmp">*</span></label>
+                                            <div class="col-sm-6" style="padding-left: 0">
+                                                <input type="text" id="charge" class="form-control" name="charge" placeholder="" value="{{isset($user) ? $user->charge : ''}}" required tabindex="12"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-1 col-md-6">
+                                        <div class="mb-1 row">
+                                            <label for="status" class="col-sm-2 col-form-label-lg color-red-tmp"
+                                                   style="padding-right: 0">{{__('plan')}}</label>
+                                            <div class="col-sm-6" style="padding-left: 0">
+                                                <select class="form-select color-red-tmp" id="plan" name="plan" tabindex="13" disabled>
+                                                    <option value="">{{__('all')}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-1 col-md-6">
+                                        <div class="mb-1 row">
+                                            <label for="status" class="col-sm-2 col-form-label-lg"
+                                                   style="padding-right: 0">{{__('status')}}</label>
+                                            <div class="col-sm-6" style="padding-left: 0">
+                                                <select class="form-select" id="status" name="status" tabindex="14">
+                                                    <option value="1" {{isset($user) && $user->status == 1 ? 'selected' : ''}}>{{__('enable')}}</option>
+                                                    <option value="0" {{isset($user) && $user->status == 0 ? 'selected' : ''}}>{{__('stop')}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
                                     <div class="mb-1 col-md-12">
                                         <div class="mb-1 row">
                                             <label for="post_code" class="col-sm-1 col-form-label-lg"
@@ -113,48 +157,14 @@
                                 <div class="row">
                                     <div class="mb-1 col-md-6">
                                         <div class="mb-1 row">
-                                            <label for="represent" class="col-sm-2 col-form-label-lg"
-                                                   style="padding-right: 0">{{__('represent')}} <span class="color-red-tmp">*</span></label>
+                                            <label for="contact" class="col-sm-2 col-form-label-lg"
+                                                   style="padding-right: 0">{{__('contact')}}</label>
                                             <div class="col-sm-6" style="padding-left: 0">
-                                                <input type="text" id="represent" class="form-control" name="represent" placeholder="" value="{{isset($user) ? $user->represent : ''}}" required tabindex="11"/>
+                                                <input type="text" id="contact" class="form-control" name="contact" placeholder="" value="{{isset($user) ? $user->contact : ''}}" required tabindex="2"/>
                                             </div>
+                                            <label class="col-sm-4 ps-0" style="padding-top: 10px">{{__('half-string')}}</label>
                                         </div>
                                     </div>
-                                    <div class="mb-1 col-md-6">
-                                        <div class="mb-1 row">
-                                            <label for="charge" class="col-sm-2 col-form-label-lg"
-                                                   style="padding-right: 0">{{__('charge')}} <span class="color-red-tmp">*</span></label>
-                                            <div class="col-sm-6" style="padding-left: 0">
-                                                <input type="text" id="charge" class="form-control" name="charge" placeholder="" value="{{isset($user) ? $user->charge : ''}}" required tabindex="12"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mb-1 col-md-6">
-                                        <div class="mb-1 row">
-                                            <label for="status" class="col-sm-2 col-form-label-lg color-red-tmp"
-                                                   style="padding-right: 0">{{__('plan')}}</label>
-                                            <div class="col-sm-6" style="padding-left: 0">
-                                                <select class="form-select color-red-tmp" id="plan" name="plan" tabindex="13" disabled>
-                                                    <option value="">{{__('all')}}</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mb-1 col-md-6">
-                                        <div class="mb-1 row">
-                                            <label for="status" class="col-sm-2 col-form-label-lg"
-                                                   style="padding-right: 0">{{__('status')}}</label>
-                                            <div class="col-sm-6" style="padding-left: 0">
-                                                <select class="form-select" id="status" name="status" tabindex="14">
-                                                    <option value="1" {{isset($user) && $user->status == 1 ? 'selected' : ''}}>{{__('enable')}}</option>
-                                                    <option value="0" {{isset($user) && $user->status == 0 ? 'selected' : ''}}>{{__('stop')}}</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <div class="row">
                                     <div class="mb-1 col-md-12">
                                         <div class="mb-1 row">
                                             <label for="remarks" class="col-sm-1 col-form-label-lg"
@@ -171,7 +181,7 @@
                                         @if(isset($user))
                                             <button type="reset" class="btn btn-danger waves-effect waves-float waves-light me-1" onclick="event.preventDefault();deleteData({{$user->id}}, '{{route('manager.company-delete')}}')" tabindex="14">{{__('delete')}}</button>
                                         @endif
-                                        <label class="btn btn-dark waves-effect " tabindex="15" id="btn_cancel">{{__('cancel')}}</label>
+                                        <label class="btn btn-outline-secondary waves-effect " tabindex="15" id="btn_cancel">{{__('cancel')}}</label>
                                     </div>
                                 </div>
                             </form>

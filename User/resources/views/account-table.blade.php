@@ -14,7 +14,7 @@
 
     @foreach($data as $index => $item)
         <tr>
-            <td class="border text-center align-middle" style="padding: 10px">{{$index+1}}</td>
+            <td class="border text-end align-middle px-1" style="padding: 10px">{{$index+1}}</td>
             <td class="p-0 border text-left align-middle px-1">{{$item['subject']}}</td>
             <td class="p-0 border text-left align-middle px-1">{{$item['assistant']}}</td>
             <td class="p-0 border text-left align-middle px-1">{{$item['code']}}</td>
@@ -23,7 +23,7 @@
             <td class="p-0 border text-center align-middle">
                 <input type="hidden" value="{{$item['id']}}">
                 @if($item['user_id'] == \Illuminate\Support\Facades\Auth::user()->id)
-                    <a href="{{route('client.account-edit', $item['id'])}}" class="btn btn-outline-dark waves-effect ex_change" style="padding: 8px; margin: 5px;">{{__('edit')}}</a>
+                    <a href="{{route('client.account-edit', $item['id'])}}" class="btn background-sky color-white waves-effect ex_change" style="padding: 8px; margin: 5px;">{{__('edit')}}</a>
                 @endif
             </td>
         </tr>

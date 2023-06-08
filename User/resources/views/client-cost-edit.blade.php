@@ -63,7 +63,7 @@
                                 </div>
                                 <div class="row mt-0">
                                     <div class="mb-0 col-md-6">
-                                        <div class="mb-0 row" style="height: 100%;">
+                                        <div class="mb-0 row" style="height: calc(100vh - 300px);">
                                             <label for="remarks" class="col-sm-2 col-form-label-lg"
                                                    style="padding-right: 0; align-self: auto">{{__('photo')}}</label>
                                             <div class="col-sm-9">
@@ -130,8 +130,8 @@
                                                    style="padding-right: 0">{{__('percent')}}</label>
                                             <div class="col-sm-10" style="padding-left: 0">
                                                 <select class="form-select" id="percent" name="percent" tabindex="2" data-index="2">
-                                                    <option value="8" {{$data['percent'] == 8 ? 'selected' : ''}}>8％</option>
-                                                    <option value="10" {{$data['percent'] == 10 ? 'selected' : ''}}>10％</option>
+                                                    <option value="8" {{$data['percent'] == 8 ? 'selected' : ''}}>{{__('eight')}}</option>
+                                                    <option value="10" {{$data['percent'] == 10 ? 'selected' : ''}}>{{__('ten')}}</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -156,17 +156,17 @@
                                                 <p class="mb-0" style="margin-top: 10px">{{date('Y/m/d', strtotime($data['created_at']))}}</p>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="row mt-1">
-                                    <div class="col-12 text-center">
-                                        <a type="button" class="dt-button add-new btn btn-primary me-1" id="cost_export_pdf"
-                                           href="{{route('client.cost-export-pdf', $data->id)}}">
-                                            <i data-feather='download'></i>{{__('report')}}
-                                        </a>
-                                        <button type="button" class="btn btn-primary me-1 btn_submit" onclick="event.preventDefault();saveForm('{{route('client.cost-save')}}')" tabindex="8">{{__('register')}}</button>
-                                        <button type="reset" class="btn btn-dark waves-effect waves-float waves-light me-1" onclick="event.preventDefault();deleteData({{$data->id}}, '{{route('client.cost-delete')}}')" tabindex="9">{{__('delete')}}</button>
-                                        <label class="btn btn-outline-secondary waves-effect " tabindex="10" id="btn_cancel">{{__('cancel')}}</label>
+                                        <div class="row mt-1">
+                                            <div class="col-12 text-center">
+                                                <a type="button" class="dt-button add-new btn background-sky color-white me-1" id="cost_export_pdf"
+                                                   href="{{route('client.cost-export-pdf', $data->id)}}">
+                                                    <i data-feather='download'></i>{{__('report')}}
+                                                </a>
+                                                <button type="button" class="btn background-sky color-white me-1 btn_submit" onclick="event.preventDefault();saveForm('{{route('client.cost-save')}}')" tabindex="8" {{$data->export == 1 ? 'disabled' : ''}}>{{__('save')}}</button>
+                                                <button type="reset" class="btn btn-danger waves-effect waves-float waves-light me-1" onclick="event.preventDefault();deleteData({{$data->id}}, '{{route('client.cost-delete')}}')" tabindex="9">{{__('delete')}}</button>
+                                                <label class="btn btn-outline-secondary waves-effect " tabindex="10" id="btn_cancel">{{__('cancel')}}</label>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </form>
@@ -200,6 +200,7 @@
             className: "img-viewer",
             inline: true,
             title: false,
+            navbar: false,
             toolbar: {
                 zoomIn: function (){
                     viewer.zoom(0.5);

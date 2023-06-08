@@ -36,6 +36,13 @@ Route::group(['middleware' => 'auth'], function (){
         Route::post('cost-export-csv', [UserController::class, 'costExportCSV'])->name('client.cost-export-csv');
         Route::get('cost-export-pdf/{id}', [UserController::class, 'costExportPDF'])->name('client.cost-export-pdf');
 
+        //会計ソフト
+        Route::get('software-add', [UserController::class, 'addSoftware'])->name('client.software-add');
+        Route::post('cost-export-csv-software', [UserController::class, 'costExportCSVSoftware'])->name('client.cost-export-csv-software');
+        Route::get('software-history', [UserController::class, 'historySoftware'])->name('client.software-history');
+        Route::post('software-history-table', [UserController::class, 'historySoftwareTable'])->name('client.software-history-table');
+        Route::post('software-history-delete', [UserController::class, 'historySoftwareDelete'])->name('client.software-history-delete');
+
         //勘定項目管理
         Route::get('account-manage', [UserController::class, 'manageAccount'])->name('client.account-manage');
         Route::get('account-add', [UserController::class, 'addAccount'])->name('client.account-add');

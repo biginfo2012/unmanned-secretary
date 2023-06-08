@@ -9,7 +9,7 @@ class Cost extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'user_id', 'shop_id', 'pay_date', 'total', 'percent', 'content', 'note', 'url', 'status', 'account_id', 'type', 'cost_code'
+        'user_id', 'shop_id', 'pay_date', 'total', 'percent', 'content', 'note', 'url', 'status', 'account_id', 'type', 'cost_code', 'export'
     ];
     public function user(){
         return $this->hasOne(User::class, 'id', 'user_id');

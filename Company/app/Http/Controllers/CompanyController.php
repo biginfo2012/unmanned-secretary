@@ -10,6 +10,7 @@ use App\Models\Cost;
 use App\Models\Shop;
 use App\Models\TaxType;
 use App\Models\User;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -28,13 +29,37 @@ class CompanyController extends Controller
     {
         $contact = $request->contact;
         $type = $request->type;
+        // Get the first day of the last month
+        $firstDayLastMonth = (new DateTime('first day of last month'))->format('Y-m-d');
+        // Get the last day of the last month
+        $lastDayLastMonth = (new DateTime('last day of last month'))->format('Y-m-d');
+        // Get the first day of this month
+        $firstDayThisMonth = (new DateTime('first day of this month'))->format('Y-m-d');
         $user_id = Auth::user()->id;
         if (isset($type)) {
             $data = User::where('parent_id', $user_id)->where('role', 'client')->where('type', $type)->where('contact', 'like', '%' . $contact . '%')->orderBy('created_at', 'desc')->get();
         } else {
             $data = User::where('parent_id', $user_id)->where('role', 'client')->where('contact', 'like', '%' . $contact . '%')->orderBy('created_at', 'desc')->get();
         }
-
+        $arr = array();
+        foreach($data as $user){
+            $tmp['id'] = $user['id'];
+            $tmp['user_code'] = $user['user_code'];
+            $tmp['name'] = $user['name'];
+            $tmp['type'] = $user['type'];
+            $tmp['email'] = $user['email'];
+            $tmp['charge'] = $user['charge'];
+            $tmp['contact'] = $user['contact'];
+            $tmp['created_at'] = $user['created_at'];
+            $tmp['status'] = $user['status'];
+            $tmp['this_month'] = Cost::where('user_id', $user['id'])->where('status', 1)->where('created_at', '>=', $firstDayThisMonth . " 00:00:00")
+                ->where('created_at', '<=', date('Y-m-d H:i:s'))->get()->count();
+            $tmp['prev_month'] = Cost::where('user_id', $user['id'])->where('status', 1)->where('created_at', '>=', $firstDayLastMonth . " 00:00:00")
+                ->where('created_at', '<=', $lastDayLastMonth . " 23:59:59")->get()->count();
+            $tmp['total_cnt'] = Cost::where('user_id', $user['id'])->where('status', 1)->get()->count();
+            array_push($arr, $tmp);
+        }
+        $data = $arr;
         return view('client-table', compact('data'));
     }
 
@@ -77,9 +102,12 @@ class CompanyController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'user_code' => $request->user_code,
-                'post_code' => $request->post_code,
-                'address' => $request->address,
                 'contact' => $request->contact,
+                'post_code' => $request->post_code,
+                'prefecture' => $request->prefecture,
+                'city' => $request->city,
+                'town' => $request->town,
+                'after' => $request->after,
                 'charge' => $request->charge,
                 'status' => $request->status,
                 'remarks' => $request->remarks,
@@ -96,9 +124,12 @@ class CompanyController extends Controller
                     'name' => $request->name,
                     'email' => $request->email,
                     'password' => Hash::make($request->password),
-                    'post_code' => $request->post_code,
-                    'address' => $request->address,
                     'contact' => $request->contact,
+                    'post_code' => $request->post_code,
+                    'prefecture' => $request->prefecture,
+                    'city' => $request->city,
+                    'town' => $request->town,
+                    'after' => $request->after,
                     'charge' => $request->charge,
                     'remarks' => $request->remarks,
                     'type' => $request->type,
@@ -110,9 +141,12 @@ class CompanyController extends Controller
                     'user_code' => $request->user_code,
                     'name' => $request->name,
                     'email' => $request->email,
-                    'post_code' => $request->post_code,
-                    'address' => $request->address,
                     'contact' => $request->contact,
+                    'post_code' => $request->post_code,
+                    'prefecture' => $request->prefecture,
+                    'city' => $request->city,
+                    'town' => $request->town,
+                    'after' => $request->after,
                     'charge' => $request->charge,
                     'remarks' => $request->remarks,
                     'type' => $request->type,
@@ -130,6 +164,81 @@ class CompanyController extends Controller
         $id = $request->id;
         User::where('id', $id)->delete();
         return response()->json(['status' => true]);
+    }
+    public function clientExportCSV(Request $request)
+    {
+        $contact = $request->contact;
+        $type = $request->type;
+        // Get the first day of the last month
+        $firstDayLastMonth = (new DateTime('first day of last month'))->format('Y-m-d');
+        // Get the last day of the last month
+        $lastDayLastMonth = (new DateTime('last day of last month'))->format('Y-m-d');
+        // Get the first day of this month
+        $firstDayThisMonth = (new DateTime('first day of this month'))->format('Y-m-d');
+        $user_id = Auth::user()->id;
+        if (isset($type)) {
+            $data = User::where('parent_id', $user_id)->where('role', 'client')->where('type', $type)->where('contact', 'like', '%' . $contact . '%')->orderBy('created_at', 'desc')->get();
+        } else {
+            $data = User::where('parent_id', $user_id)->where('role', 'client')->where('contact', 'like', '%' . $contact . '%')->orderBy('created_at', 'desc')->get();
+        }
+        $arr = array();
+        foreach($data as $user){
+            $tmp['id'] = $user['id'];
+            $tmp['user_code'] = $user['user_code'];
+            $tmp['name'] = $user['name'];
+            $tmp['type'] = $user['type'];
+            $tmp['email'] = $user['email'];
+            $tmp['charge'] = $user['charge'];
+            $tmp['contact'] = $user['contact'];
+            $tmp['created_at'] = $user['created_at'];
+            $tmp['status'] = $user['status'];
+            $tmp['this_month'] = Cost::where('user_id', $user['id'])->where('status', 1)->where('created_at', '>=', $firstDayThisMonth . " 00:00:00")
+                ->where('created_at', '<=', date('Y-m-d H:i:s'))->get()->count();
+            $tmp['prev_month'] = Cost::where('user_id', $user['id'])->where('status', 1)->where('created_at', '>=', $firstDayLastMonth . " 00:00:00")
+                ->where('created_at', '<=', $lastDayLastMonth . " 23:59:59")->get()->count();
+            $tmp['total_cnt'] = Cost::where('user_id', $user['id'])->where('status', 1)->get()->count();
+            array_push($arr, $tmp);
+        }
+        $data = $arr;
+        $fileName = '顧客情報一覧.csv';
+
+        $headers = array(
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        );
+
+        $callback = function() use($data) {
+            $file = fopen('php://output', 'w');
+            $columns = ['NO', mb_convert_encoding(__('user-code'), "SJIS-win", "UTF-8"), mb_convert_encoding(__('client-name'), "SJIS-win", "UTF-8"),
+                mb_convert_encoding(__('type') . "名", "SJIS-win", "UTF-8"), mb_convert_encoding(__('this-month') . "名", "SJIS-win", "UTF-8"),
+                mb_convert_encoding(__('prev-month') . "名", "SJIS-win", "UTF-8"), mb_convert_encoding(__('total-cnt') . "名", "SJIS-win", "UTF-8"),
+                mb_convert_encoding(__('user-id'), "SJIS-win", "UTF-8"),
+                mb_convert_encoding(__('contact'), "SJIS-win", "UTF-8"), mb_convert_encoding(__('register-date'), "SJIS-win", "UTF-8")];
+            fputcsv($file, $columns);
+
+            foreach ($data as $index => $item) {
+                $row[]  = $index+1;
+                $row[]  = $item['user_code'];
+                $row[]  = mb_convert_encoding($item['name'], "SJIS-win", "UTF-8");
+                $row[]  = $item['type'] == 1 ? mb_convert_encoding(__('co-op'), "SJIS-win", "UTF-8") : ($item['type'] == 2 ? mb_convert_encoding(__('solo-pro'), "SJIS-win", "UTF-8") : mb_convert_encoding(__('alone'), "SJIS-win", "UTF-8"));
+                $row[] = $item['this_month'];
+                $row[] = $item['prev_month'];
+                $row[] = $item['total_cnt'];
+                $row[] = $item['email'];
+                $row[] = $item['contact'];
+                $row[] = date('Y/m/d', strtotime($item['created_at']));
+
+                fputcsv($file, $row);
+                $row = [];
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 
     public function costClient($id)
@@ -552,9 +661,12 @@ WHERE a.type_id = " . $type_id . ") AS ak ON ak.keyword_id = c.account_id WHERE 
             $data = [
                 'name' => $request->name,
                 'password' => Hash::make($request->password),
-                'post_code' => $request->post_code,
-                'address' => $request->address,
                 'contact' => $request->contact,
+                'post_code' => $request->post_code,
+                'prefecture' => $request->prefecture,
+                'city' => $request->city,
+                'town' => $request->town,
+                'after' => $request->after,
                 'charge' => $request->charge,
                 'remarks' => $request->remarks,
                 'plan_id' => $request->plan,
@@ -563,9 +675,12 @@ WHERE a.type_id = " . $type_id . ") AS ak ON ak.keyword_id = c.account_id WHERE 
         } else {
             $data = [
                 'name' => $request->name,
-                'post_code' => $request->post_code,
-                'address' => $request->address,
                 'contact' => $request->contact,
+                'post_code' => $request->post_code,
+                'prefecture' => $request->prefecture,
+                'city' => $request->city,
+                'town' => $request->town,
+                'after' => $request->after,
                 'charge' => $request->charge,
                 'remarks' => $request->remarks,
                 'plan_id' => $request->plan,

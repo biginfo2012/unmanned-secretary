@@ -52,6 +52,53 @@
                                     </div>
                                 </div>
                                 <div class="row">
+                                    <div class="mb-1 col-md-6">
+                                        <div class="mb-1 row">
+                                            <label for="contact" class="col-sm-2 col-form-label-lg"
+                                                   style="padding-right: 0">{{__('represent')}} </label>
+                                            <div class="col-sm-6" style="padding-left: 0">
+                                                <input type="text" id="represent" class="form-control" name="represent" placeholder=""
+                                                       value="{{isset($user) ? $user->represent : ''}}" required tabindex="5"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-1 col-md-6">
+                                        <div class="mb-1 row">
+                                            <label for="charge" class="col-sm-2 col-form-label-lg"
+                                                   style="padding-right: 0">{{__('charge')}}</label>
+                                            <div class="col-sm-6" style="padding-left: 0">
+                                                <input type="text" id="charge" class="form-control" name="charge" placeholder=""
+                                                       value="{{isset($user) ? $user->charge : ''}}" required tabindex="8" data-index="8"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-1 col-md-6">
+                                        <div class="mb-1 row">
+                                            <label for="type" class="col-sm-2 col-form-label-lg"
+                                                   style="padding-right: 0; padding-top: 10px">{{__('type')}}</label>
+                                            <div class="col-sm-6" style="padding-left: 0">
+                                                <select class="form-select" id="type" name="type" tabindex="2">
+                                                    <option value="1" {{isset($user) && $user->type == 1 ? 'selected' : ''}}>{{__('co-op')}}</option>
+                                                    <option value="2" {{isset($user) && $user->type == 2 ? 'selected' : ''}}>{{__('solo-pro')}}</option>
+                                                    <option value="3" {{isset($user) && $user->type == 3 ? 'selected' : ''}}>{{__('alone')}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-1 col-md-6">
+                                        <div class="mb-1 row">
+                                            <label for="status" class="col-sm-2 col-form-label-lg"
+                                                   style="padding-right: 0">{{__('status')}}</label>
+                                            <div class="col-sm-6" style="padding-left: 0">
+                                                <select class="form-select" id="status" name="status" tabindex="10" data-index="10">
+                                                    <option value="1" {{isset($user) && $user->status == 1 ? 'selected' : ''}}>{{__('enable')}}</option>
+                                                    <option value="0" {{isset($user) && $user->status == 0 ? 'selected' : ''}}>{{__('stop')}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
                                     <div class="mb-1 col-md-12">
                                         <div class="mb-1 row">
                                             <label for="post_code" class="col-sm-1 col-form-label-lg"
@@ -103,46 +150,11 @@
                                     <div class="mb-1 col-md-6">
                                         <div class="mb-1 row">
                                             <label for="contact" class="col-sm-2 col-form-label-lg"
-                                                   style="padding-right: 0">{{__('represent')}} </label>
+                                                   style="padding-right: 0">{{__('contact')}}</label>
                                             <div class="col-sm-6" style="padding-left: 0">
-                                                <input type="text" id="represent" class="form-control" name="represent" placeholder=""
-                                                       value="{{isset($user) ? $user->represent : ''}}" required tabindex="5"/>
+                                                <input type="text" id="contact" class="form-control" name="contact" placeholder="" value="{{isset($user) ? $user->contact : ''}}" required tabindex="2"/>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="mb-1 col-md-6">
-                                        <div class="mb-1 row">
-                                            <label for="charge" class="col-sm-2 col-form-label-lg"
-                                                   style="padding-right: 0">{{__('charge')}}</label>
-                                            <div class="col-sm-6" style="padding-left: 0">
-                                                <input type="text" id="charge" class="form-control" name="charge" placeholder=""
-                                                       value="{{isset($user) ? $user->charge : ''}}" required tabindex="8" data-index="8"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mb-1 col-md-6">
-                                        <div class="mb-1 row">
-                                            <label for="type" class="col-sm-2 col-form-label-lg"
-                                                   style="padding-right: 0; padding-top: 10px">{{__('type')}}</label>
-                                            <div class="col-sm-6" style="padding-left: 0">
-                                                <select class="form-select" id="type" name="type" tabindex="2">
-                                                    <option value="1" {{isset($user) && $user->type == 1 ? 'selected' : ''}}>{{__('co-op')}}</option>
-                                                    <option value="2" {{isset($user) && $user->type == 2 ? 'selected' : ''}}>{{__('solo-pro')}}</option>
-                                                    <option value="3" {{isset($user) && $user->type == 3 ? 'selected' : ''}}>{{__('alone')}}</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mb-1 col-md-6">
-                                        <div class="mb-1 row">
-                                            <label for="status" class="col-sm-2 col-form-label-lg"
-                                                   style="padding-right: 0">{{__('status')}}</label>
-                                            <div class="col-sm-6" style="padding-left: 0">
-                                                <select class="form-select" id="status" name="status" tabindex="10" data-index="10">
-                                                    <option value="1" {{isset($user) && $user->status == 1 ? 'selected' : ''}}>{{__('enable')}}</option>
-                                                    <option value="0" {{isset($user) && $user->status == 0 ? 'selected' : ''}}>{{__('stop')}}</option>
-                                                </select>
-                                            </div>
+                                            <label class="col-sm-4 ps-0" style="padding-top: 10px">{{__('half-string')}}</label>
                                         </div>
                                     </div>
                                     <div class="mb-1 col-md-12">
@@ -164,7 +176,7 @@ onclick="event.preventDefault();saveForm('{{route('manager.client-save')}}')" ta
 {{--                                            <button type="reset" class="btn btn-dark waves-effect waves-float waves-light me-1"
 onclick="event.preventDefault();deleteData({{$user->id}}, '{{route('manager.client-delete')}}')" tabindex="13">{{__('delete')}}</button>--}}
 {{--                                        @endif--}}
-                                        <label class="btn btn-dark waves-effect " tabindex="14" id="btn_cancel">{{__('cancel')}}</label>
+                                        <label class="btn btn-outline-secondary waves-effect " tabindex="14" id="btn_cancel">{{__('cancel')}}</label>
                                     </div>
                                 </div>
                             </form>
